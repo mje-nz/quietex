@@ -1,17 +1,17 @@
 from setuptools import setup
 
 
-# with open("Readme.md") as f:
-#     readme_lines = f.readlines()
-#     long_description = '\n'.join(readme_lines[:readme_lines.index('## Development\n')])
+with open("Readme.md") as f:
+    readme_lines = f.readlines()
+    long_description = "\n".join(readme_lines[: readme_lines.index("## Development\n")])
 
 
 setup(
     name="quietex",
     version="0.1.0pre",
     description="Filter output of pdflatex.",
-    # long_description=long_description,
-    # long_description_content_type="text/markdown",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     url="https://github.com/mje-nz/quietex",
     author="Matthew Edwards",
     license="BSD 3-Clause",
