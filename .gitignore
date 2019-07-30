@@ -1,0 +1,11 @@
+.idea
+
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+
+**/*.pyc
+*.egg-info/
+/build/
+/dist/
