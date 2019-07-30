@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Filter and colour output of pdflatex.
 
-Usage: filter.py <latex engine> <options> <file>
+Usage: quietex.py <latex engine> <options> <file>
 
 Author: Matthew Edwards
 Date: July 2019
 """
 import os
 import sys
+import textwrap
 
 import colorama
 import pexpect
@@ -81,7 +82,7 @@ def handle_line(line: str):
         print(line)
 
 
-def main(cmd: list):
+def run_command(cmd: list):
     """Run the command, filtering and colouring its output.
 
     The command is assumed to be a pdflatex invocation, but other LaTeX compilers
@@ -112,6 +113,34 @@ def main(cmd: list):
     sys.exit(pdflatex.exitstatus)
 
 
+def print_usage():
+    print(
+        textwrap.dedent(
+        """
+        Usage: quietex [-h|--help] [LATEX] [OPTION]... [ARGS]
+
+        Filter and colour output of pdflatex.
+
+        optional arguments:
+          -h, --help  show this help message and exit
+        """
+        ).strip()
+    )
+
+
+def main():
+    # Can't use argparse as it chokes on unrecognised options, so parse args manually
+    if len(sys.argv) < 2:
+        print_usage()
+        sys.exit(-1)
+
+    args = sys.argv[1:]
+    if "-h" in args or "--help" in args:
+        print_usage()
+        return
+
+    run_command(args)
+
+
 if __name__ == "__main__":
-    assert len(sys.argv) > 1
-    main(sys.argv[1:])
+    main()
