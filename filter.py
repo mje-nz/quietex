@@ -7,7 +7,7 @@ Author: Matthew Edwards
 Date: July 2019
 """
 import os
-import subprocess
+import pexpect
 import sys
 
 import colorama
@@ -20,12 +20,13 @@ def main(cmd):
     env = dict(os.environ, max_print_line="1000000000")
 
     # Run pdflatex and filter/colour output
-    pdflatex = subprocess.Popen(
-        cmd, env=env,
-        stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-    )
-    for line in iter(pdflatex.stdout.readline, b''):
-        line = line.decode('utf8').strip()
+    pdflatex = pexpect.spawn(cmd[0], cmd[1:], env=env, encoding='utf-8')
+    while True:
+        line = pdflatex.readline()
+        if line == '':
+            # EOF
+            break
+        line = line.strip('\r\n')
         if line.startswith('(/') or line.startswith('(./'):
             # Start loading file
             #print(Style.DIM + line + Style.RESET_ALL)
