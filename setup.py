@@ -8,7 +8,7 @@ with open("Readme.md") as f:
 
 setup(
     name="quietex",
-    version="0.1.0pre",
+    version="0.1.0",
     description="Filter output of pdflatex.",
     long_description=long_description,
     long_description_content_type="text/markdown",
