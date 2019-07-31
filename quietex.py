@@ -97,6 +97,7 @@ def run_command(cmd: list):
 
     # Run pdflatex and filter/colour output
     pdflatex = pexpect.spawn(cmd[0], cmd[1:], env=env, encoding="utf-8", timeout=0.2)
+    print(Style.DIM + "QuieTeX enabled" + Style.RESET_ALL)
     while True:
         try:
             line = pdflatex.readline()
