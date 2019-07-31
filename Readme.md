@@ -18,3 +18,11 @@ To use with `latexmk`, add this to your `latexmkrc`:
 # Make output prettier
 eval `quietex --latexmkrc`;
 ```
+
+
+## Development
+Use [pre-commit](https://pre-commit.com) to check and format changes before committing:
+```bash
+pip install pre-commit
+pre-commit install
+```

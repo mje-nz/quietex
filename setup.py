@@ -1,5 +1,5 @@
+"""quietex setup."""
 from setuptools import setup
-
 
 with open("Readme.md") as f:
     readme_lines = f.readlines()

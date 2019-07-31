@@ -18,8 +18,7 @@ colorama.init()
 
 
 def probably_warning(line: str):
-    """Check if a line of pdflatex output is (probably) a warning message.
-    """
+    """Check if a line of pdflatex output is (probably) a warning message."""
     if line.startswith("Overfull") or line.startswith("Underfull"):
         return True
     line = line.lower()
@@ -91,7 +90,6 @@ def run_command(cmd: list):
     Args:
         cmd (list[str]): Command to run.
     """
-
     # Disable pdflatex line wrap (where possible)
     env = dict(os.environ, max_print_line="1000000000")
 
@@ -157,10 +155,11 @@ def print_latexmkrc(force=False):
 
 
 def print_usage():
+    """Print usage message."""
     print(
         textwrap.dedent(
             """
-        Usage: quietex [-h|--help] [-l|--latexmkrc] [--latexmkrc-force] [LATEX] [OPTION]... [ARGS]
+        Usage: quietex [OPTIONS] [LATEX] [LATEX-OPTION]... [LATEX-ARGS]
 
         Filter and colour output of pdflatex.
 
@@ -174,6 +173,7 @@ def print_usage():
 
 
 def main():
+    """Handle command line arguments."""
     # Can't use argparse as it chokes on unrecognised options, so parse args manually
     if len(sys.argv) < 2:
         print_usage()
