@@ -12,3 +12,9 @@ To use:
 ```bash
 quietex pdflatex test.tex
 ```
+
+To use with `latexmk`, add this to your `latexmkrc`:
+```perl
+# Make output prettier
+eval `quietex --latexmkrc`;
+```

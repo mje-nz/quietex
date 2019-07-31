@@ -31,4 +31,5 @@ setup(
     entry_points={"console_scripts": ["quietex=quietex:main"]},
     python_requires=">=3.5",
     install_requires=["pexpect"],
+    zip_safe=False,
 )
