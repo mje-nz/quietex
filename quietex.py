@@ -7,6 +7,7 @@ Author: Matthew Edwards
 Date: July 2019
 """
 import os
+import re
 import sys
 import textwrap
 
@@ -61,6 +62,22 @@ def handle_prompt(pdflatex: pexpect.spawn):
             prompt = ""
 
 
+
+page_number_regex = re.compile(r"\[(\d+)[ \]\{]")
+def find_page_number(line: str):
+    pages = page_number_regex.findall(line)
+    if pages:
+        return pages[-1]
+
+
+# Based on https://github.com/olivierverdier/pydflatex/blob/a466693d0184e9b68b4592b829d0272d0aae4e05/pydflatex/latexlogparser.py#L14
+file_regex = re.compile(r"\((\.?/[^\s(){}]+)")
+def find_file(line: str):
+    files = file_regex.findall(line)
+    if files:
+        return files[-1]
+
+
 def handle_line(line: str):
     """Evaluate one line of output and print/colour/suppress it."""
     line = line.strip("\r\n")
@@ -72,6 +89,10 @@ def handle_line(line: str):
         # Finish loading file
         # print(Style.DIM + line + Style.RESET_ALL)
         pass
+    elif page_number_regex.match(line):
+        # Page number
+        # print(Style.DIM + line + Style.RESET_ALL)
+        pass
     elif line.startswith("!"):
         # Error
         print(Style.BRIGHT + Fore.RED + line + Style.RESET_ALL)
@@ -79,6 +100,21 @@ def handle_line(line: str):
         print(Fore.YELLOW + line + Style.RESET_ALL)
     else:
         print(line)
+
+
+def delete_last_line_printed():
+    # Cursor to start of line
+    sys.stdout.write("\x1b[G")
+    # Delete whole line
+    sys.stdout.write("\x1b[2K")
+    # sys.stdout.write(".")
+
+
+def print_status(last_page, last_file):
+    status = f"[{last_page}]"
+    if last_file:
+        status += f" ({last_file})"
+    print(Fore.BLUE + status + Style.RESET_ALL, end="", flush=True)
 
 
 def run_command(cmd: list):
@@ -96,6 +132,10 @@ def run_command(cmd: list):
     # Run pdflatex and filter/colour output
     pdflatex = pexpect.spawn(cmd[0], cmd[1:], env=env, encoding="utf-8", timeout=0.2)
     print(Style.DIM + "QuieTeX enabled" + Style.RESET_ALL)
+    print()  # Hack to avoid losing this line at the start of the loop
+    last_page = 0
+    last_file = ""
+
     while True:
         try:
             line = pdflatex.readline()
@@ -106,7 +146,26 @@ def run_command(cmd: list):
         if line == "":
             # EOF
             break
+
+        delete_last_line_printed()
+
         handle_line(line)
+
+        # TODO: This kind of works, but it would be better if it parsed the line bit by bit
+        page_number = find_page_number(line)
+        if page_number:
+            last_page = page_number
+
+        # TODO: This doesn't really work as intended, it needs to track the whole stack
+        file = find_file(line)
+        if file:
+            last_file = file
+
+        print_status(last_page, last_file)
+        if page_number:
+            # When the page number changes, print an extra status so it stays in the output
+            print()
+            print_status(last_page, last_file)
 
     pdflatex.close()
     sys.exit(pdflatex.exitstatus)
