@@ -15,6 +15,8 @@ import colorama
 import pexpect
 from colorama import Fore, Style
 
+from .input_output import BasicIo, TerminalIo
+
 colorama.init()
 
 
@@ -31,7 +33,7 @@ def probably_warning(line: str):
     return False
 
 
-def handle_prompt(pdflatex: pexpect.spawn):
+def handle_prompt(tty: BasicIo, pdflatex: pexpect.spawn):
     """Check if pdflatex has prompted for user input and if so handle it.
 
     If the "? " prompt is detected, prompt the user for a command (or Ctrl+C or
@@ -49,7 +51,7 @@ def handle_prompt(pdflatex: pexpect.spawn):
         # pdflatex needs a newline after Ctrl+C, so loop until we get a proper
         # response from the user
         try:
-            user_response = input(Fore.RED + prompt + Style.RESET_ALL)
+            user_response = tty.input(prompt, style=Fore.RED)
             pdflatex.send(user_response + "\n")
             return
         except EOFError:
@@ -62,59 +64,62 @@ def handle_prompt(pdflatex: pexpect.spawn):
             prompt = ""
 
 
-
 page_number_regex = re.compile(r"\[(\d+)[ \]\{]")
+
+
 def find_page_number(line: str):
+    """Parse a line of output and return the last page number it contains, if any."""
     pages = page_number_regex.findall(line)
     if pages:
         return pages[-1]
 
 
-# Based on https://github.com/olivierverdier/pydflatex/blob/a466693d0184e9b68b4592b829d0272d0aae4e05/pydflatex/latexlogparser.py#L14
+# Based on https://github.com/olivierverdier/pydflatex/blob/a466693d0184e9b68b4592b829d0272d0aae4e05/pydflatex/latexlogparser.py#L14  # noqa: B950
 file_regex = re.compile(r"\((\.?/[^\s(){}]+)")
+
+
 def find_file(line: str):
+    """Parse a line of output and return the last file opening it contains, if any."""
     files = file_regex.findall(line)
     if files:
         return files[-1]
 
 
-def handle_line(line: str):
+def handle_line(tty: BasicIo, line: str):
     """Evaluate one line of output and print/colour/suppress it."""
+    # TODO: This kind of works, but it would be better if it parsed the line bit by bit
+    page_number = find_page_number(line)
+    if page_number:
+        tty.page = page_number
+
+    # TODO: This doesn't really work as intended, it needs to track the whole stack
+    file = find_file(line)
+    if file:
+        tty.file = file
+
     line = line.strip("\r\n")
     if line.startswith("(/") or line.startswith("(./"):
         # Start loading file
-        # print(Style.DIM + line + Style.RESET_ALL)
+        # return tty.print(line, style=Style.DIM)
         pass
     elif line.startswith(")"):
         # Finish loading file
-        # print(Style.DIM + line + Style.RESET_ALL)
+        # return tty.print(line, style=Style.DIM)
         pass
     elif page_number_regex.match(line):
         # Page number
-        # print(Style.DIM + line + Style.RESET_ALL)
+        # return tty.print(line, style=Style.DIM)
         pass
     elif line.startswith("!"):
         # Error
-        print(Style.BRIGHT + Fore.RED + line + Style.RESET_ALL)
+        return tty.print(line, style=Style.BRIGHT + Fore.RED)
     elif probably_warning(line):
-        print(Fore.YELLOW + line + Style.RESET_ALL)
+        return tty.print(line, style=Fore.YELLOW)
     else:
-        print(line)
+        return tty.print(line)
 
-
-def delete_last_line_printed():
-    # Cursor to start of line
-    sys.stdout.write("\x1b[G")
-    # Delete whole line
-    sys.stdout.write("\x1b[2K")
-    # sys.stdout.write(".")
-
-
-def print_status(last_page, last_file):
-    status = f"[{last_page}]"
-    if last_file:
-        status += f" ({last_file})"
-    print(Fore.BLUE + status + Style.RESET_ALL, end="", flush=True)
+    # Didn't print anything, make sure the status line is updated
+    return tty.print("", end="")
 
 
 def run_command(cmd: list):
@@ -131,41 +136,26 @@ def run_command(cmd: list):
 
     # Run pdflatex and filter/colour output
     pdflatex = pexpect.spawn(cmd[0], cmd[1:], env=env, encoding="utf-8", timeout=0.2)
-    print(Style.DIM + "QuieTeX enabled" + Style.RESET_ALL)
-    print()  # Hack to avoid losing this line at the start of the loop
-    last_page = 0
-    last_file = ""
+
+    tty = TerminalIo()
+    tty.status_style = Fore.BLUE
+    tty.print("QuieTeX enabled", style=Style.DIM)
 
     while True:
         try:
             line = pdflatex.readline()
         except pexpect.exceptions.TIMEOUT:
             # Check if it's waiting for input
-            handle_prompt(pdflatex)
+            handle_prompt(tty, pdflatex)
             continue
         if line == "":
             # EOF
             break
 
-        delete_last_line_printed()
+        handle_line(tty, line)
 
-        handle_line(line)
-
-        # TODO: This kind of works, but it would be better if it parsed the line bit by bit
-        page_number = find_page_number(line)
-        if page_number:
-            last_page = page_number
-
-        # TODO: This doesn't really work as intended, it needs to track the whole stack
-        file = find_file(line)
-        if file:
-            last_file = file
-
-        print_status(last_page, last_file)
-        if page_number:
-            # When the page number changes, print an extra status so it stays in the output
-            print()
-            print_status(last_page, last_file)
+    # TODO: Only add newline when necessary
+    print()
 
     pdflatex.close()
     sys.exit(pdflatex.exitstatus)

@@ -8,7 +8,7 @@ with open("Readme.md") as f:
 
 setup(
     name="quietex",
-    version="0.1.0",
+    version="0.2.0pre",
     description="Filter output of pdflatex.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -27,7 +27,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Topic :: Text Processing :: Markup :: LaTeX",
     ],
-    py_modules=["quietex"],
+    packages=["quietex"],
     entry_points={"console_scripts": ["quietex=quietex:main"]},
     python_requires=">=3.5",
     install_requires=["pexpect"],
