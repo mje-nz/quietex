@@ -11,7 +11,13 @@ from colorama import Style
 class BasicIo(object):
     """Handle input and output."""
 
-    def __init__(self):
+    def __init__(self, use_style=True):
+        """Set up IO state.
+
+        Args:
+            use_style (bool): If False, ignore all style arguments.
+        """
+        self.use_style = use_style
         self.page = None
         self.file = None
         self.status_style = None
@@ -24,7 +30,7 @@ class BasicIo(object):
 
     def input(self, prompt, style=None):
         """Display a prompt with the given style and return the user's input."""
-        if style:
+        if style and self.use_style:
             prompt = style + prompt + Style.RESET_ALL
         return self._input(prompt)
 
@@ -43,10 +49,10 @@ class BasicIo(object):
             int: number of characters written.
         """
         length = 0
-        if style:
+        if style and self.use_style:
             length += self._write(style)
         length += self._write(value + end)
-        if style:
+        if style and self.use_style:
             length += self._write(Style.RESET_ALL)
         return length
 
@@ -62,9 +68,7 @@ class BasicIo(object):
         if self.file:
             status += f" ({self.file})"
             status = status.strip(" ")
-        if self.status_style:
-            status = self.status_style + status + Style.RESET_ALL
-        length = self._print(status, end=end)
+        length = self._print(status, end=end, style=self.status_style)
         self._last_page = self.page
         self._last_file = self.file
         return length
