@@ -69,26 +69,62 @@ def test_print_status_colour():
     o.assert_last_output("[1] (./test.tex)", style=Fore.RED)
 
 
+def _test_page_change(o: FakeIo, end="\n"):
+    o.print("test 1")
+    o.page = 1
+    o.print("test 2", end=end)
+    o.assert_output(0, "test 1")
+    o.assert_output(1, "test 2", end)
+
+
 def test_status_prints_when_page_changes():
     """Test printing normally causes the status to print when the page changes."""
     o = FakeIo()
-    o.print("test 1")
-    o.page = 1
-    o.print("test 2")
-    o.assert_output(0, "test 1")
-    o.assert_output(1, "test 2")
+    _test_page_change(o)
     o.assert_output(2, "[1]")
+
+
+def test_status_doesnt_print_when_page_changes_without_newline():
+    """Test the status doesn't print when the page changes without a line ending."""
+    o = FakeIo()
+    _test_page_change(o, end="")
+    assert len(o.outputs) == 2
+
+
+def test_status_doesnt_print_on_page_change_when_disabled():
+    """Test the status doesn't print when the page changes if auto-status disabled."""
+    o = FakeIo(auto_status=False)
+    _test_page_change(o)
+    assert len(o.outputs) == 2
+
+
+def _test_file_change(o: FakeIo, end="\n"):
+    o.print("test 1")
+    o.file = "./test.tex"
+    o.print("test 2", end=end)
+    o.assert_output(0, "test 1")
+    o.assert_output(1, "test 2", end)
 
 
 def test_status_prints_when_file_changes():
     """Test printing normally causes the status to print when the file changes."""
     o = FakeIo()
-    o.print("test 1")
-    o.file = "./test.tex"
-    o.print("test 2")
-    o.assert_output(0, "test 1")
-    o.assert_output(1, "test 2")
+    _test_file_change(o)
     o.assert_output(2, "(./test.tex)")
+
+
+def test_status_doesnt_print_when_file_changes_without_newline():
+    """Test the status doesn't print when the file changes without a line ending."""
+    o = FakeIo()
+    _test_file_change(o, end="")
+    assert len(o.outputs) == 2
+
+
+def test_status_doesnt_print_on_file_change_when_disabled():
+    """Test the status doesn't print when the file changes if auto-status disabled."""
+    o = FakeIo(auto_status=False)
+    _test_file_change(o)
+    assert len(o.outputs) == 2
 
 
 class StringBasicIo(BasicIo):

@@ -11,12 +11,15 @@ from colorama import Style
 class BasicIo(object):
     """Handle input and output."""
 
-    def __init__(self, use_style=True):
+    def __init__(self, auto_status=True, use_style=True):
         """Set up IO state.
 
         Args:
+            auto_status (bool): Print status line automatically when the page number or
+                currently-open file changes.
             use_style (bool): If False, ignore all style arguments.
         """
+        self.auto_status = auto_status
         self.use_style = use_style
         self.page = None
         self.file = None
@@ -79,7 +82,8 @@ class BasicIo(object):
     def print(self, value="", end="\n", style: str = None):
         """Print a value, then print the status line if it has changed."""
         length = self._print(value, end, style)
-        if end == "\n" and self.page != self._last_page or self.file != self._last_file:
+        status_changed = self.page != self._last_page or self.file != self._last_file
+        if end == "\n" and status_changed and self.auto_status:
             length += self.print_status()
         self._flush()
         return length
