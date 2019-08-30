@@ -15,7 +15,9 @@ import colorama
 import pexpect
 from colorama import Fore, Style
 
+from .formatting import LatexLogFormatter
 from .input_output import BasicIo, TerminalIo
+from .parsing import LatexLogParser
 
 colorama.init()
 
@@ -141,6 +143,9 @@ def run_command(cmd: list):
     tty.status_style = Fore.BLUE
     tty.print("QuieTeX enabled", style=Style.DIM)
 
+    parser = LatexLogParser()
+    formatter = LatexLogFormatter()
+
     while True:
         try:
             line = pdflatex.readline()
@@ -152,7 +157,10 @@ def run_command(cmd: list):
             # EOF
             break
 
-        handle_line(tty, line)
+        # handle_line(tty, line)
+
+        # TODO: Page numbers would work better if it parsed the line bit by bit
+        formatter.handle_tokens(tty, parser.parse_line(line.strip("\r\n")))
 
     # TODO: Only add newline when necessary
     print()
