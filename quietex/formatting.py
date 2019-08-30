@@ -32,7 +32,6 @@ class LatexLogFormatter(object):
 
     def print_tokens(self, tty: BasicIo, tokens: List[Token]):
         """Print (if appropriate) a list of tokens representing one line."""
-        have_printed = False
         for token in tokens:
             value = token.text
             style = None
@@ -40,16 +39,14 @@ class LatexLogFormatter(object):
                 style = Style.BRIGHT + Fore.RED
             elif token.type == Token.WARNING:
                 style = Fore.YELLOW
-            elif token.type in [Token.OPEN_FILE, Token.CLOSE_FILE, Token.PAGE]:
-                # TODO: Option for dim
+            elif token.type in [Token.OPEN_FILE, Token.CLOSE_FILE]:
                 if self.quiet:
                     continue
                 value = token.text
-            tty.print(value, style=style)
-            have_printed = True
-        if not have_printed:
-            # Didn't print anything, make sure the status line is updated
-            tty.print("", end="")
+                style = Style.DIM
+            tty.print(value, style=style, end="")
+        # End line
+        tty.print()
 
     def handle_tokens(self, tty: BasicIo, tokens: List[Token]):
         """Process and print (if appropriate) a list of tokens representing one line."""

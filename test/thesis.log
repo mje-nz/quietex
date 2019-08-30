@@ -1,0 +1,309 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./Thesis.tex
+LaTeX2e <2018-12-01>
+(./electhesis.cls
+Document Class: electhesis 1994/12/02 Elec. Eng. thesis class
+Elec. Eng. Thesis Class `electhesis' <1994/12/02>. BETA VERSION.
+
+Please note that this is a BETA version of electhesis.
+If you encounter any problems or bugs in using it please email a message
+to latex@elec.canterbury.ac.nz.
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2018/09/03 v1.4i Standard LaTeX document class
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/bk11.clo)) (/usr/local/texlive/2019/texmf-dist/tex/latex/setspace/setspace.sty)) (/usr/local/texlive/2019/texmf-dist/tex/latex/base/inputenc.sty) (./packages.tex (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/microtype.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/keyval.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/microtype-pdftex.def) (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/microtype.cfg)) (./electhesis-tweaks.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/lmodern.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/base/fontenc.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/base/t1enc.def)) (/usr/local/texlive/2019/texmf-dist/tex/latex/base/textcomp.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/base/ts1enc.def (/usr/local/texlive/2019/texmf-dist/tex/latex/base/ts1enc.dfu))) (/usr/local/texlive/2019/texmf-dist/tex/latex/subfig/subfig.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/caption/caption.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/caption/caption3.sty)
+
+Package caption Warning: Unsupported document class (or package) detected,
+(caption)                usage of the caption package is not recommended.
+See the caption package documentation for explanation.
+
+)) (/usr/local/texlive/2019/texmf-dist/tex/latex/enumitem/enumitem.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/hyperref.sty (/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty (/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty)) (/usr/local/texlive/2019/texmf-dist/tex/generic/ifxetex/ifxetex.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/auxhook.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/kvoptions.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/pd1enc.def) (/usr/local/texlive/2019/texmf-dist/tex/latex/latexconfig/hyperref.cfg) (/usr/local/texlive/2019/texmf-dist/tex/latex/url/url.sty)) (/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/hpdftex.def (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty))
+
+Package hyperref Warning: Option `bookmarks' has already been used,
+(hyperref)                setting the option has no effect on input line 139.
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/natbib/natbib.sty)) (/usr/local/texlive/2019/texmf-dist/tex/latex/etoolbox/etoolbox.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/mathtools/mathtools.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/tools/calc.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/mathtools/mhsetup.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amstext.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amsgen.sty)) (/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amsbsy.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amsopn.sty))) (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/amssymb.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/amsfonts.sty)) (/usr/local/texlive/2019/texmf-dist/tex/latex/siunitx/siunitx.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/l3kernel/expl3.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/l3kernel/expl3-code.tex) (/usr/local/texlive/2019/texmf-dist/tex/latex/l3kernel/l3pdfmode.def)) (/usr/local/texlive/2019/texmf-dist/tex/latex/l3packages/xparse/xparse.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/tools/array.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/translator/translator.sty)) (/usr/local/texlive/2019/texmf-dist/tex/latex/glossaries-extra/glossaries-extra.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/xkeyval/xkeyval.sty (/usr/local/texlive/2019/texmf-dist/tex/generic/xkeyval/xkeyval.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/xkeyval/xkvutils.tex))) (/usr/local/texlive/2019/texmf-dist/tex/latex/glossaries/base/glossaries.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/base/ifthen.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/mfirstuc/mfirstuc.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/textcase/textcase.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/xfor/xfor.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/datatool/datatool-base.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/substr/substr.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/datatool/datatool-fp.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp.sty `Fixed Point Package', Version 0.8, April 2, 1995 (C) Michael Mehlich (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/defpattern.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp-basic.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp-addons.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp-snap.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp-exp.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp-trigo.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp-pas.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp-random.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp-eqn.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp-upn.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp-eval.sty)))) (/usr/local/texlive/2019/texmf-dist/tex/latex/glossaries/base/glossaries-compatible-307.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/tracklang/tracklang.sty (/usr/local/texlive/2019/texmf-dist/tex/generic/tracklang/tracklang.tex)) (/usr/local/texlive/2019/texmf-dist/tex/latex/glossaries-english/glossaries-english.ldf) (/usr/local/texlive/2019/texmf-dist/tex/latex/glossaries/styles/glossary-hypernav.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/glossaries/styles/glossary-list.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/glossaries/styles/glossary-long.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/tools/longtable.sty)) (/usr/local/texlive/2019/texmf-dist/tex/latex/glossaries/styles/glossary-super.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/supertabular/supertabular.sty)) (/usr/local/texlive/2019/texmf-dist/tex/latex/glossaries/styles/glossary-tree.sty))) (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/graphicx.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/graphics.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/trig.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-cfg/graphics.cfg) (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-def/pdftex.def))) (/usr/local/texlive/2019/texmf-dist/tex/latex/pdfpages/pdfpages.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/eso-pic/eso-pic.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/xcolor/xcolor.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-cfg/color.cfg))) (/usr/local/texlive/2019/texmf-dist/tex/latex/pdfpages/pppdftex.def)) (/usr/local/texlive/2019/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/utilities/pgfutil-common-lists.tex)) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def (/usr/local/texlive/2019/texmf-dist/tex/latex/ms/everyshi.sty)) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/pgf.revision.tex))) (/usr/local/texlive/2019/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/utilities/pgfkeysfiltered.code.tex)) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-pdftex.def (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-pdf.def))) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex)) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex))) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex)) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex)) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.tex))) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty)) (/usr/local/texlive/2019/texmf-dist/tex/latex/standalone/standalone.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/tools/shellesc.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/currfile/currfile.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/filehook/filehook.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/currfile/currfile-abspath.sty)
+
+Package currfile-abspath Warning: The required recorder file (.fls) was not found.
+(currfile-abspath)                Please compile with the '-recorder' option.
+(currfile-abspath)                Note that MikTeX requires two compiler runs.
+(currfile-abspath)                Occurred on input line 292.
+
+) (/usr/local/texlive/2019/texmf-dist/tex/latex/gincltex/gincltex.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/svn-prov/svn-prov.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/adjustbox/adjustbox.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/adjustbox/adjcalc.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/adjustbox/trimclip.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/collectbox/collectbox.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/adjustbox/tc-pdftex.def)) (/usr/local/texlive/2019/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/varwidth/varwidth.sty))) (/usr/local/texlive/2019/texmf-dist/tex/latex/filemod/filemod-expmin.sty)) (/usr/local/texlive/2019/texmf-dist/tex/latex/placeins/placeins.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/booktabs/booktabs.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/multirow/multirow.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/listings/listings.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/listings/lstmisc.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/listings/listings.cfg)) (/usr/local/texlive/2019/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+) (/usr/local/texlive/2019/texmf-dist/tex/latex/fnpct/fnpct.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/koma-script/scrlfile.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/filehook/filehook-scrlfile.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/translations/translations.sty)) (/usr/local/texlive/2019/texmf-dist/tex/latex/footmisc/footmisc.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/fnbreak/fnbreak.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/todonotes/todonotes.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/pgf/utilities/pgffor.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex)) (/usr/local/texlive/2019/texmf-dist/tex/latex/pgf/math/pgfmath.sty (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex))) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex))) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex) (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshadows.code.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfadings.code.tex (/usr/local/texlive/2019/texmf-dist/tex/generic/pgf/libraries/pgflibraryfadings.code.tex)))) (/usr/local/texlive/2019/texmf-dist/tex/latex/cleveref/cleveref.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/subfiles/subfiles.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/tools/verbatim.sty))) (./mph/maths.tex) (./commands.tex) (./acronyms.tex) (./symbols.tex) (/usr/local/texlive/2019/texmf-dist/tex/latex/pythontex/pythontex.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/fvextra/fvextra.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty Style option: `fancyvrb' v3.2a <2019/01/15> (tvz)) (/usr/local/texlive/2019/texmf-dist/tex/latex/upquote/upquote.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/lineno/lineno.sty)) (/usr/local/texlive/2019/texmf-dist/tex/generic/xstring/xstring.sty (/usr/local/texlive/2019/texmf-dist/tex/generic/xstring/xstring.tex)) (/usr/local/texlive/2019/texmf-dist/tex/latex/pgfopts/pgfopts.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/caption/newfloat.sty)) (/usr/local/texlive/texmf-local/tex/latex/pythontexfigures/pythontexfigures.sty) (./Thesis.aux) (/usr/local/texlive/2019/texmf-dist/tex/latex/base/ts1cmr.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/t1lmr.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-cmr.cfg)
+
+Package microtype Warning: \nonfrenchspacing is active. Adjustment of
+(microtype)                interword spacing will disable it. You might want
+(microtype)                to add `\microtypecontext{spacing=nonfrench}'
+(microtype)                to your preamble.
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/caption/ltcaption.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/nameref.sty (/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/gettitlestring.sty)) (./Thesis.out) (./Thesis.out) (/usr/local/texlive/2019/texmf-dist/tex/latex/translator/translator-basic-dictionary-English.dict) (/usr/local/texlive/2019/texmf-dist/tex/latex/siunitx/siunitx-abbreviations.cfg) (/usr/local/texlive/2019/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/grfext.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg)) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/pdflscape.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/lscape.sty)) ABD: EveryShipout initializing macros (/usr/local/texlive/2019/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl)
+No file pythontex-files-Thesis/Thesis.pytxmcr.
+Run PythonTeX to create it.
+(/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmr.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omllmm.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omslmsy.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omxlmex.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsa.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msa.cfg) (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msb.cfg) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmss.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmtt.fd) [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] (./Thesis.toc)
+No file Thesis.gls-abr.
+
+Package glossaries-extra Warning: Glossary `abbreviations' is missing on input line 69.
+
+[3] [4] (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/t1lmtt.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ts1lmr.fd)
+No file Thesis.sls.
+
+Package glossaries-extra Warning: Glossary `symbols' is missing on input line 70.
+
+[5] [6] [7] [8] (./Thesis.tdo [9]) [10] (./chapters/fiducial_marker_system/fiducial_marker_system.tex
+Chapter 1.
+
+Package natbib Warning: Citation `Garrido-Jurado2014' on page 1 undefined on input line 9.
+
+
+Package natbib Warning: Citation `Kummerle2011' on page 1 undefined on input line 9.
+
+
+Package natbib Warning: Citation `Quigley2009' on page 1 undefined on input line 9.
+
+[1]
+
+LaTeX Warning: Marginpar on page 2 moved.
+
+
+Underfull \vbox (badness 7963) has occurred while \output is active [2 <./chapters/fiducial_marker_system//img/basic_marker.png (PNG copy)>]
+
+LaTeX Warning: Marginpar on page 3 moved.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active [3] [4]
+
+Package natbib Warning: Citation `Forne2007' on page 5 undefined on input line 159.
+
+
+LaTeX Warning: Marginpar on page 5 moved.
+
+
+LaTeX Warning: Marginpar on page 5 moved.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+Underfull \vbox (badness 1400) has occurred while \output is active [5]
+
+LaTeX Warning: Marginpar on page 6 moved.
+
+
+Overfull \hbox (6.3645pt too wide) in paragraph at lines 222--226
+ [][][][]
+
+Package natbib Warning: Citation `Levenberg1944' on page 6 undefined on input line 244.
+
+
+Package natbib Warning: Citation `Marquardt1963' on page 6 undefined on input line 244.
+
+
+Package natbib Warning: Citation `Nelder1965' on page 6 undefined on input line 244.
+
+
+Underfull \vbox (badness 1303) has occurred while \output is active [6]
+
+LaTeX Warning: Marginpar on page 7 moved.
+
+
+Overfull \hbox (6.3645pt too wide) in paragraph at lines 311--315
+ [][][][]
+
+Overfull \hbox (6.3645pt too wide) in paragraph at lines 323--327
+ [][][][]
+
+Overfull \hbox (6.3645pt too wide) in paragraph at lines 335--339
+ [][][][]
+
+Overfull \hbox (6.3645pt too wide) in paragraph at lines 349--353
+ [][][][]
+
+LaTeX Warning: Marginpar on page 7 moved.
+
+
+Underfull \vbox (badness 4378) has occurred while \output is active [7] [8] [9 <./chapters/fiducial_marker_system//img/bad_marker_closeup.jpg> <./chapters/fiducial_marker_system//img/histogram_matching_graph.png>] [10 <./chapters/fiducial_marker_system//img/histogram_matching_image.png (PNG copy)> <./chapters/fiducial_marker_system//img/parameters_of_interest_distance.png> <./chapters/fiducial_marker_system//img/parameters_of_interest_size.png>] [11 <./chapters/fiducial_marker_system//img/sinusoid_marker5_frame000.png (PNG copy)> <./chapters/fiducial_marker_system//img/sinusoid_marker6_frame000.png (PNG copy)> <./chapters/fiducial_marker_system//img/sinusoid_marker5_frame000_cropped.png (PNG copy)> <./chapters/fiducial_marker_system//img/sinusoid_marker6_frame000_cropped.png (PNG copy)> <./chapters/fiducial_marker_system//img/sinusoid_marker5_stds.png> <./chapters/fiducial_marker_system//img/sinusoid_marker6_stds.png>] [12 <./chapters/fiducial_marker_system//img/sinusoid_marker5_stdtrend.png> <./chapters/fiducial_marker_system//img/sinusoid_marker6_stdtrend.png>]) (./chapters/checkerboards/checkerboards.tex [13] [14 <./chapters/fiducial_marker_system//img/marker_parameter_histogram_first.png>] [15 <./chapters/fiducial_marker_system//img/marker_parameter_histogram_second.png>] [16]
+Chapter 2.
+
+Package natbib Warning: Citation `Siebert2009' on page 17 undefined on input line 22.
+
+[17 <./chapters/checkerboards//img/checkerboard.pdf>]
+
+Package natbib Warning: Citation `Kay1993' on page 18 undefined on input line 58.
+
+[18]
+
+LaTeX Warning: Marginpar on page 19 moved.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active [19]
+Overfull \hbox (2.79605pt too wide) detected at line 132
+\OT1/lmr/bx/n/10.95 H \OT1/lmr/m/n/10.95 = [] [] \OML/lmm/m/it/10.95 :
+[20]
+Overfull \hbox (29.75981pt too wide) in paragraph at lines 183--187
+\T1/lmr/m/n/10.95 (-10) Consider the full prob-lem, where the pa-ram-e-ter vec-tor to be es-ti-mated is $[] \OT1/lmr/m/n/10.95 (-10) = [\OML/lmm/m/it/10.95 x; y; z; ^^R[]; ^^R[]; ^^R[]\OT1/lmr/m/n/10.95 (-10) ][]$
+[21]
+Overfull \hbox (34.15887pt too wide) detected at line 232
+[]
+
+Underfull \vbox (badness 10000) has occurred while \output is active [22]
+
+Package PythonTeX Warning: Missing autoprint content on input line 268.
+
+
+Overfull \hbox (6.2579pt too wide) in paragraph at lines 268--268
+|\T1/lmr/m/n/9 (-10) Vari-
+
+Overfull \hbox (5.91682pt too wide) in paragraph at lines 268--268
+\T1/lmr/m/n/9 (-10) ance
+
+Overfull \hbox (2.86122pt too wide) in paragraph at lines 268--268
+\T1/lmr/m/n/9 (-10) and
+
+Overfull \hbox (13.66948pt too wide) in paragraph at lines 268--268
+[][]\T1/lmr/m/n/9 (-10) CRLB[]
+
+Overfull \hbox (5.65988pt too wide) in paragraph at lines 268--268
+\T1/lmr/m/n/9 (-10) each
+
+Overfull \hbox (5.2492pt too wide) in paragraph at lines 268--268
+\T1/lmr/m/n/9 (-10) ram-
+
+Overfull \hbox (4.45695pt too wide) in paragraph at lines 268--268
+\T1/lmr/m/n/9 (-10) over
+
+Package PythonTeX Warning: Missing autoprint content on input line 271.
+
+
+Overfull \hbox (6.2579pt too wide) in paragraph at lines 271--271
+|\T1/lmr/m/n/9 (-10) Vari-
+
+Overfull \hbox (5.91682pt too wide) in paragraph at lines 271--271
+\T1/lmr/m/n/9 (-10) ance
+
+Overfull \hbox (2.86122pt too wide) in paragraph at lines 271--271
+\T1/lmr/m/n/9 (-10) and
+
+Overfull \hbox (13.66948pt too wide) in paragraph at lines 271--271
+[][]\T1/lmr/m/n/9 (-10) CRLB[]
+
+Overfull \hbox (5.65988pt too wide) in paragraph at lines 271--271
+\T1/lmr/m/n/9 (-10) each
+
+Overfull \hbox (5.2492pt too wide) in paragraph at lines 271--271
+\T1/lmr/m/n/9 (-10) ram-
+
+Overfull \hbox (4.45695pt too wide) in paragraph at lines 271--271
+\T1/lmr/m/n/9 (-10) over
+
+Package PythonTeX Warning: Missing autoprint content on input line 280.
+
+
+Overfull \hbox (6.2579pt too wide) in paragraph at lines 280--280
+|\T1/lmr/m/n/9 (-10) Vari-
+
+Overfull \hbox (5.91682pt too wide) in paragraph at lines 280--280
+\T1/lmr/m/n/9 (-10) ance
+
+Overfull \hbox (2.86122pt too wide) in paragraph at lines 280--280
+\T1/lmr/m/n/9 (-10) and
+
+Overfull \hbox (13.66948pt too wide) in paragraph at lines 280--280
+[][]\T1/lmr/m/n/9 (-10) CRLB[]
+
+Overfull \hbox (5.65988pt too wide) in paragraph at lines 280--280
+\T1/lmr/m/n/9 (-10) each
+
+Overfull \hbox (5.2492pt too wide) in paragraph at lines 280--280
+\T1/lmr/m/n/9 (-10) ram-
+
+Overfull \hbox (4.45695pt too wide) in paragraph at lines 280--280
+\T1/lmr/m/n/9 (-10) over
+
+Overfull \hbox (3.4113pt too wide) in paragraph at lines 280--280
+\OML/lmm/m/it/9 ^^[ \OT1/lmr/m/n/9 (-10) =
+
+Package PythonTeX Warning: Missing autoprint content on input line 283.
+
+
+Overfull \hbox (6.2579pt too wide) in paragraph at lines 283--283
+|\T1/lmr/m/n/9 (-10) Vari-
+
+Overfull \hbox (5.91682pt too wide) in paragraph at lines 283--283
+\T1/lmr/m/n/9 (-10) ance
+
+Overfull \hbox (2.86122pt too wide) in paragraph at lines 283--283
+\T1/lmr/m/n/9 (-10) and
+
+Overfull \hbox (13.66948pt too wide) in paragraph at lines 283--283
+[][]\T1/lmr/m/n/9 (-10) CRLB[]
+
+Overfull \hbox (5.65988pt too wide) in paragraph at lines 283--283
+\T1/lmr/m/n/9 (-10) each
+
+Overfull \hbox (5.2492pt too wide) in paragraph at lines 283--283
+\T1/lmr/m/n/9 (-10) ram-
+
+Overfull \hbox (4.45695pt too wide) in paragraph at lines 283--283
+\T1/lmr/m/n/9 (-10) over
+
+Overfull \hbox (6.16583pt too wide) in paragraph at lines 283--283
+\OML/lmm/m/it/9 N \OT1/lmr/m/n/9 (-10) =
+
+Package PythonTeX Warning: Missing autoprint content on input line 290.
+
+) [23] [24]
+No file Thesis.bbl.
+
+Package natbib Warning: There were undefined citations.
+
+(./Thesis.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ )
+(see the transcript file for additional information)pdfTeX warning (dest): name{Hfootnote.3} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{glo:widthpx} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{glo:iid} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{glo:width} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{glo:likelihood} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{glo:FIM} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{glo:param} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{glo:CRLB} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{glo:rot} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{glo:trans} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{glo:f} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{glo:tf} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{glo:PnP} has been referenced but does not exist, replaced by a fixed one
+
+{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}</usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmro10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
+Output written on Thesis.pdf (34 pages, 14452906 bytes).
+Transcript written on Thesis.log.

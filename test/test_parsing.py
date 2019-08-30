@@ -1,5 +1,7 @@
 """Tests for parsing module."""
 
+from pathlib import Path
+
 from quietex.parsing import LatexLogParser, Token
 
 # Output from a simple test document:
@@ -62,20 +64,20 @@ def test_parse_files_complex():
     assert p.parse_line(msg) == [
         Token(Token.CLOSE_FILE, ")"),
         Token(Token.CLOSE_FILE, ")"),
-        Token(Token.OPEN_FILE, "(/usr/a", "/usr/a"),
+        Token(Token.OPEN_FILE, " (/usr/a", "/usr/a"),
         Token(Token.CLOSE_FILE, ")"),
-        Token(Token.OPEN_FILE, "(/usr/b", "/usr/b"),
-        Token(Token.OPEN_FILE, "(/usr/c", "/usr/c"),
-        Token(Token.OPEN_FILE, "(/usr/d", "/usr/d"),
-        Token(Token.CLOSE_FILE, ")"),
-        Token(Token.CLOSE_FILE, ")"),
-        Token(Token.OPEN_FILE, "(/usr/e", "/usr/e"),
-        Token(Token.CLOSE_FILE, ")"),
-        Token(Token.OPEN_FILE, "(/usr/f", "/usr/f"),
+        Token(Token.OPEN_FILE, " (/usr/b", "/usr/b"),
+        Token(Token.OPEN_FILE, " (/usr/c", "/usr/c"),
+        Token(Token.OPEN_FILE, " (/usr/d", "/usr/d"),
         Token(Token.CLOSE_FILE, ")"),
         Token(Token.CLOSE_FILE, ")"),
-        Token(Token.OPEN_FILE, "(/usr/g", "/usr/g"),
-        Token(Token.OPEN_FILE, "(/usr/h", "/usr/h"),
+        Token(Token.OPEN_FILE, " (/usr/e", "/usr/e"),
+        Token(Token.CLOSE_FILE, ")"),
+        Token(Token.OPEN_FILE, " (/usr/f", "/usr/f"),
+        Token(Token.CLOSE_FILE, ")"),
+        Token(Token.CLOSE_FILE, ")"),
+        Token(Token.OPEN_FILE, " (/usr/g", "/usr/g"),
+        Token(Token.OPEN_FILE, " (/usr/h", "/usr/h"),
         Token(Token.CLOSE_FILE, ")"),
         Token(Token.CLOSE_FILE, ")"),
     ]
@@ -85,49 +87,101 @@ def test_parse_message_inside_files():
     """Test parsing a message hidden amongst open/close file messages."""
     p = LatexLogParser()
     msg = [
-        "(/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp.sty ",
-        "`Fixed Point Package', Version 0.8, April 2, 1995 (C) Michael Mehlich ",
-        "(/usr/local/texlive/2019/texmf-dist/tex/latex/fp/defpattern.sty)",
+        "(/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp.sty",
+        " `Fixed Point Package', Version 0.8, April 2, 1995 (C) Michael Mehlich",
+        " (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/defpattern.sty)",
     ]
-    assert p.parse_line("".join(msg)) == [
-        Token(Token.OPEN_FILE, msg[0].strip(" "), msg[0].strip("( ")),
-        Token(Token.OTHER, msg[1].strip(" ")),
-        Token(Token.OPEN_FILE, msg[2].strip(")"), msg[2].strip("()")),
-        Token(Token.CLOSE_FILE, ")"),
-    ]
+    tokens = p.parse_line("".join(msg))
+
+    assert tokens[0].type == Token.OPEN_FILE
+    assert tokens[0].text == msg[0]
+    assert tokens[0].value == msg[0].strip("( ")
+
+    assert tokens[1].type == Token.OTHER
+    assert tokens[1].text == msg[1]
+
+    assert tokens[2].type == Token.OPEN_FILE
+    assert tokens[2].text == msg[2][:-1]
+    assert tokens[2].value == msg[2].strip("( )")
+
+    assert tokens[3].type == Token.CLOSE_FILE
+    assert tokens[3].text == ")"
 
 
 def test_parse_message_followed_by_close():
     """Test parsing a message hidden amongst open/close file messages."""
     p = LatexLogParser()
     msg = [
-        "(/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp.sty ",
-        "`Fixed Point Package', Version 0.8, April 2, 1995 (C) Michael Mehlich)",
-        "(/usr/local/texlive/2019/texmf-dist/tex/latex/fp/defpattern.sty)",
+        "(/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp.sty",
+        " `Fixed Point Package', Version 0.8, April 2, 1995 (C) Michael Mehlich)",
+        " (/usr/local/texlive/2019/texmf-dist/tex/latex/fp/defpattern.sty)",
     ]
-    assert p.parse_line("".join(msg)) == [
-        Token(Token.OPEN_FILE, msg[0].strip(" "), msg[0].strip("( ")),
-        Token(Token.OTHER, msg[1].strip(")")),
-        Token(Token.CLOSE_FILE, ")"),
-        Token(Token.OPEN_FILE, msg[2].strip(")"), msg[2].strip("()")),
-        Token(Token.CLOSE_FILE, ")"),
-    ]
+    tokens = p.parse_line("".join(msg))
+
+    assert tokens[0].type == Token.OPEN_FILE
+    assert tokens[0].text == msg[0]
+    assert tokens[0].value == msg[0].strip("( ")
+
+    assert tokens[1].type == Token.OTHER
+    assert tokens[1].text == msg[1][:-1]
+
+    assert tokens[2].type == Token.CLOSE_FILE
+    assert tokens[2].text == ")"
+
+    assert tokens[3].type == Token.OPEN_FILE
+    assert tokens[3].text == msg[2][:-1]
+    assert tokens[3].value == msg[2].strip("( )")
+
+    assert tokens[4].type == Token.CLOSE_FILE
+    assert tokens[4].text == ")"
 
 
 def test_parse_message_inside_files_fancyvrb():
     """Test parsing the message from loading fancyvrb, which has brackets in it (!)."""
     p = LatexLogParser()
     msg = [
-        "(/usr/local/texlive/2019/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty ",
-        "Style option: `fancyvrb' v3.2a <2019/01/15> (tvz))",
-        "(/usr/local/texlive/2019/texmf-dist/tex/latex/upquote/upquote.sty",
+        "(/usr/local/texlive/2019/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty",
+        " Style option: `fancyvrb' v3.2a <2019/01/15> (tvz))",
+        " (/usr/local/texlive/2019/texmf-dist/tex/latex/upquote/upquote.sty",
     ]
-    assert p.parse_line("".join(msg)) == [
-        Token(Token.OPEN_FILE, msg[0].strip(" "), msg[0].strip("( ")),
-        Token(Token.OTHER, msg[1][:-1]),
-        Token(Token.CLOSE_FILE, ")"),
-        Token(Token.OPEN_FILE, msg[2], msg[2].strip("(")),
+    tokens = p.parse_line("".join(msg))
+
+    assert tokens[0].type == Token.OPEN_FILE
+    assert tokens[0].text == msg[0]
+    assert tokens[0].value == msg[0].strip("( ")
+
+    assert tokens[1].type == Token.OTHER
+    assert tokens[1].text == msg[1][:-1]
+
+    assert tokens[2].type == Token.CLOSE_FILE
+    assert tokens[2].text == ")"
+
+    assert tokens[3].type == Token.OPEN_FILE
+    assert tokens[3].text == msg[2]
+    assert tokens[3].value == msg[2].strip(" (")
+
+
+def test_parse_message_inside_files_fancyvrb_minimal():
+    """Test parsing the message from loading fancyvrb, which has brackets in it (!).
+
+    Make sure it works without the next open message.
+    """
+    p = LatexLogParser()
+    msg = [
+        "(/usr/local/texlive/2019/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty",
+        " Style option: `fancyvrb' v3.2a <2019/01/15> (tvz))",
     ]
+    tokens = p.parse_line("".join(msg))
+
+    assert tokens[0].type == Token.OPEN_FILE
+    assert tokens[0].text == msg[0]
+    assert tokens[0].value == msg[0].strip("( ")
+
+    assert tokens[1].type == Token.OTHER
+    assert tokens[1].text == msg[1][:-1]
+
+    assert tokens[2].type == Token.CLOSE_FILE
+    assert tokens[2].text == ")"
 
 
 # New output from a simple test document with an error:
@@ -193,8 +247,9 @@ def test_parse_page_number_simple():
 
 
 def test_parsing_page_number_complex():
-    """Test parsing line numbers on the same line as other messages."""
+    """Test parsing page numbers on the same line as other messages."""
     p = LatexLogParser()
+    # TODO: [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] (./Thesis.toc)  # noqa: B950
     for msg in [
         "(./Thesis.gls-abr [1])",
         ") (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmtt.fd) [1]",
@@ -207,11 +262,38 @@ def test_parsing_page_number_complex():
         assert (Token.PAGE, "1") in [(token.type, token.value) for token in tokens]
 
 
+def test_parsing_page_number_complex_1():
+    """Test parsing a page number inside an open/close file."""
+    p = LatexLogParser()
+    tokens = p.parse_line("(./Thesis.gls-abr [1])")
+    assert tokens == [
+        Token(Token.OPEN_FILE, "(./Thesis.gls-abr", "./Thesis.gls-abr"),
+        Token(Token.PAGE, " [1]", "1"),
+        Token(Token.CLOSE_FILE, ")"),
+    ]
+
+
+def test_parsing_page_number_complex_2():
+    """Test parsing a page number at the end of a warning."""
+    p = LatexLogParser()
+    msg = r"Underfull \vbox (badness 10000) has occurred while \output is active [1]"
+    tokens = p.parse_line(msg)
+    assert tokens == [Token(Token.WARNING, msg[:-4]), Token(Token.PAGE, " [1]", "1")]
+
+
 def test_parse_page_number_false_positives():
     """Test parsing things that look like page numbers but aren't."""
     p = LatexLogParser()
     for msg in ["[Loading MPS to PDF converter (version 2006.09.02).]", " [][][][]"]:
         assert p.parse_line(msg) == [Token(Token.OTHER, msg)]
+
+
+def test_round_trip():
+    """Test nothing is lost when parsing a typical log."""
+    p = LatexLogParser()
+    log = open(Path(__file__).parent / "thesis.log").read()
+    tokens = p.parse_text(log)
+    assert log == "".join(token.text for token in tokens)
 
 
 # Underfull vbox warning followed by page numbers and noise
