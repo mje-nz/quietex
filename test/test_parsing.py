@@ -150,6 +150,34 @@ def test_parse_message_inside_files_fancyvrb_minimal():
     ]
 
 
+def test_parse_read_image():
+    """Test parsing some read images messages"""
+    p = LatexLogParser()
+    # TODO: Names with spaces
+    for msg in [
+        "<./img/test.jpg>",
+        " <./img/test.jpg>",
+        "<./img/test.png>",
+        "<./img/test.png (PNG copy)>",
+        "</usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmbx10.pfb>",
+    ]:
+        assert p.parse_line(msg) == [ReadImageToken(msg)]
+
+
+def test_parse_read_image_in_warning():
+    """Test parsing a read image inside a page number at the end of a warning."""
+    p = LatexLogParser()
+    line = r"Underfull \vbox (badness 7963) has occurred while \output is active [2 <./test.png (PNG copy)>]"  # noqa: B950
+    assert p.parse_line(line) == [
+        WarningToken(
+            r"Underfull \vbox (badness 7963) has occurred while \output is active"
+        ),  # noqa: B950
+        PageToken(" [2", "2"),
+        ReadImageToken(" <./test.png (PNG copy)>"),
+        OtherToken("]"),
+    ]
+
+
 # New output from a simple test document with an error:
 # ! Undefined control sequence.
 # l.6 \badcommand

@@ -45,8 +45,8 @@ def test_print_warning():
     tty.print.assert_any_call("test", end="", style=Fore.YELLOW)
 
 
-def test_print_open_close_page():
-    """Test (not) printing open/close/page messages."""
+def test_print_open_close():
+    """Test (not) printing open/close messages."""
     tty = Mock(BasicIo)
     f = LatexLogFormatter()
     f.handle_tokens(
@@ -54,11 +54,11 @@ def test_print_open_close_page():
         [
             OpenFileToken("(./test.tex", "./test.tex"),
             CloseFileToken(),
-            PageToken("[1]", "1"),
+            ReadImageToken("<./test.png>"),
         ],
     )
     # Just enough for status line
-    tty.print.assert_called_with()
+    tty.print.assert_called_once_with()
 
 
 def test_handle_page_numbers():

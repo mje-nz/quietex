@@ -3,7 +3,7 @@
 from attr import attrib, attrs
 
 
-# TODO: <> for reading images, {} for reading auxiliary files
+# TODO: {} for reading auxiliary files
 @attrs
 class Token(object):
     """LaTeX log output token."""
@@ -24,6 +24,13 @@ class ErrorToken(Token):  # noqa: D101
 
     def __init__(self, text):
         super().__init__(text)
+
+
+class NewlineToken(Token):  # noqa: D101
+    __slots__ = ()
+
+    def __init__(self):
+        super().__init__("\n")
 
 
 class OpenFileToken(Token):
@@ -59,15 +66,20 @@ class PageToken(Token):
     __slots__ = ()
 
 
-class WarningToken(Token):  # noqa: D101
+class ReadImageToken(Token):  # noqa: D101
+    """Read image or font token.
+
+    Never contains other tokens, sometimes contains output from the image loader.
+    """
+
     __slots__ = ()
 
     def __init__(self, text):
         super().__init__(text)
 
 
-class NewlineToken(Token):  # noqa: D101
+class WarningToken(Token):  # noqa: D101
     __slots__ = ()
 
-    def __init__(self):
-        super().__init__("\n")
+    def __init__(self, text):
+        super().__init__(text)

@@ -11,9 +11,10 @@ class LatexLogParser(object):
     Currently stateless, extracts tokens from one line at a time.
     """
 
-    PAGE_REGEX = re.compile(r" ?\[(\d+)[ \]]?")
+    PAGE_REGEX = re.compile(r" ?\[(\d+)\]?")
     # Based on https://github.com/olivierverdier/pydflatex/blob/a466693d0184e9b68b4592b829d0272d0aae4e05/pydflatex/latexlogparser.py#L14  # noqa: B950
     OPEN_FILE_REGEX = re.compile(r" ?\((\.?/[^\s(){}]+)")
+    READ_IMAGE_REGEX = re.compile(r" ?<[^\s(){}]+(?: \(.*\))?>")
 
     def _is_warning(self, line: str):
         if line.startswith("Overfull") or line.startswith("Underfull"):
@@ -70,6 +71,12 @@ class LatexLogParser(object):
                 # Close file at start of text
                 tokens.append(CloseFileToken())
                 text = text[1:]
+                continue
+
+            read_image_match = self.READ_IMAGE_REGEX.match(text)
+            if read_image_match:
+                tokens.append(ReadImageToken(read_image_match.group()))
+                text = text[read_image_match.end() :]
                 continue
 
             page_match = self.PAGE_REGEX.match(text)
