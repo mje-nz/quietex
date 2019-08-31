@@ -2,7 +2,8 @@
 
 from pathlib import Path
 
-from quietex.parsing import *  # noqa: F403
+from quietex.parsing import LatexLogParser
+from quietex.tokens import *  # noqa: F403
 
 # Output from a simple test document:
 # This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex)  # noqa: B950

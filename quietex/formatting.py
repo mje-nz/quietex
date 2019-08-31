@@ -5,7 +5,7 @@ from typing import List
 from colorama import Fore, Style
 
 from .input_output import BasicIo
-from .parsing import *  # noqa: F403
+from .tokens import *  # noqa: F403
 
 
 class LatexLogFormatter(object):

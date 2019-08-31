@@ -8,7 +8,7 @@ from colorama import Fore, Style
 
 from quietex.formatting import LatexLogFormatter
 from quietex.input_output import BasicIo
-from quietex.parsing import *  # noqa: F403
+from quietex.tokens import *  # noqa: F403
 
 
 def test_print_other():
