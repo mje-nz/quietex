@@ -1,22 +1,78 @@
 """Parser for LaTeX compiler log output."""
 
 import re
-from collections import namedtuple
+
+from attr import attrib, attrs
 
 
 # TODO: <> for reading images, {} for reading auxiliary files
-# TODO: having this a tuple makes it easy to mess up (it really shouldn't be a sequence)
-class Token(namedtuple("Token", ("type", "text", "value"), defaults=("", None))):
+@attrs
+class Token(object):
     """LaTeX log output token."""
 
-    # Types
-    CLOSE_FILE = "close"
-    ERROR = "error"
-    OPEN_FILE = "open"
-    OTHER = "other"
-    PAGE = "page"
-    WARNING = "warning"
-    NEWLINE = "newline"
+    text: str = attrib()
+    value: str = attrib(default=None)
+
+
+class CloseFileToken(Token):  # noqa: D101
+    __slots__ = ()
+
+    def __init__(self):
+        super().__init__(")")
+
+
+class ErrorToken(Token):  # noqa: D101
+    __slots__ = ()
+
+    def __init__(self, text):
+        super().__init__(text)
+
+
+class OpenFileToken(Token):
+    """Open file token.
+
+    Attributes:
+        text: Full text of token including ( and preceding whitespace
+        value: File being opened.
+    """
+
+    __slots__ = ()
+
+
+class OtherToken(Token):
+    """Any message that isn't classified as something else."""
+
+    __slots__ = ()
+
+    def __init__(self, text):
+        super().__init__(text)
+
+
+class PageToken(Token):
+    """Page number token (emitted at the start of a new page).
+
+    Note that the end of a page number message can get mixed up in other messages.
+
+    Attributes:
+        text: Full text of token including [ and preceding whitespace
+        value: Page number.
+    """
+
+    __slots__ = ()
+
+
+class WarningToken(Token):  # noqa: D101
+    __slots__ = ()
+
+    def __init__(self, text):
+        super().__init__(text)
+
+
+class NewlineToken(Token):  # noqa: D101
+    __slots__ = ()
+
+    def __init__(self):
+        super().__init__("\n")
 
 
 class LatexLogParser(object):
@@ -39,9 +95,9 @@ class LatexLogParser(object):
 
     def _parse_error_or_warning(self, line):
         if line.startswith("!"):
-            return Token(Token.ERROR, line)
+            return ErrorToken(line)
         elif self._is_warning(line):
-            return Token(Token.WARNING, line)
+            return WarningToken(line)
 
     def _search_for_token(self, text: str):
         """Find the next token in the text.
@@ -76,24 +132,20 @@ class LatexLogParser(object):
             open_match = self.OPEN_FILE_REGEX.match(text)
             if open_match:
                 # Open file at start of text
-                tokens.append(
-                    Token(Token.OPEN_FILE, open_match.group(), open_match.group(1))
-                )
+                tokens.append(OpenFileToken(open_match.group(), open_match.group(1)))
                 text = text[open_match.end() :]
                 continue
 
             if text.startswith(")"):
                 # Close file at start of text
-                tokens.append(Token(Token.CLOSE_FILE, ")"))
+                tokens.append(CloseFileToken())
                 text = text[1:]
                 continue
 
             page_match = self.PAGE_REGEX.match(text)
             if page_match:
                 # Page number at start of text
-                tokens.append(
-                    Token(Token.PAGE, page_match.group(), page_match.group(1))
-                )
+                tokens.append(PageToken(page_match.group(), page_match.group(1)))
                 text = text[page_match.end() :]
                 continue
 
@@ -109,10 +161,10 @@ class LatexLogParser(object):
                 while other_msg.endswith(")") and other_msg.count(
                     "("
                 ) < other_msg.count(")"):
-                    close_tokens.append(Token(Token.CLOSE_FILE, ")"))
+                    close_tokens.append(CloseFileToken())
                     other_msg = other_msg[:-1]
                 # Dump the rest as an other
-                tokens.append(Token(Token.OTHER, other_msg))
+                tokens.append(OtherToken(other_msg))
                 tokens += close_tokens
                 # Leave the open/page for the next iteration
                 text = text[match.start() :]
@@ -123,10 +175,10 @@ class LatexLogParser(object):
                 # Strip close tokens off the end
                 close_tokens = []
                 while text.endswith(")") and text.count("(") < text.count(")"):
-                    close_tokens.append(Token(Token.CLOSE_FILE, ")"))
+                    close_tokens.append(CloseFileToken())
                     text = text[:-1]
                 # Dump the rest as an other
-                tokens.append(Token(Token.OTHER, text))
+                tokens.append(OtherToken(text))
                 tokens += close_tokens
                 text = ""
 
@@ -164,7 +216,7 @@ class LatexLogParser(object):
 
         # Give up
         if remaining_text:
-            tokens += [Token(Token.OTHER, remaining_text)]
+            tokens += [OtherToken(remaining_text)]
 
         return tokens
 
@@ -173,5 +225,5 @@ class LatexLogParser(object):
         tokens = []
         for line in text.splitlines():
             tokens += self.parse_line(line)
-            tokens += [Token(Token.NEWLINE, "\n")]
+            tokens += [NewlineToken()]
         return tokens

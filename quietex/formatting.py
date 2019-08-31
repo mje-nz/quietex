@@ -5,7 +5,7 @@ from typing import List
 from colorama import Fore, Style
 
 from .input_output import BasicIo
-from .parsing import Token
+from .parsing import *  # noqa: F403
 
 
 class LatexLogFormatter(object):
@@ -18,12 +18,12 @@ class LatexLogFormatter(object):
     def process_tokens(self, tty: BasicIo, tokens: List[Token]):
         """Process a list of tokens."""
         for token in tokens:
-            if token.type == Token.PAGE:
+            if type(token) is PageToken:
                 tty.page = token.value
-            elif token.type == Token.OPEN_FILE:
+            elif type(token) is OpenFileToken:
                 self.stack.append(token.value)
                 tty.file = token.value
-            elif token.type == Token.CLOSE_FILE:
+            elif type(token) is CloseFileToken:
                 try:
                     self.stack.pop()
                     tty.file = self.stack[-1]
@@ -35,11 +35,11 @@ class LatexLogFormatter(object):
         for token in tokens:
             value = token.text
             style = None
-            if token.type == Token.ERROR:
+            if type(token) is ErrorToken:
                 style = Style.BRIGHT + Fore.RED
-            elif token.type == Token.WARNING:
+            elif type(token) is WarningToken:
                 style = Fore.YELLOW
-            elif token.type in [Token.OPEN_FILE, Token.CLOSE_FILE]:
+            elif type(token) in [OpenFileToken, CloseFileToken]:
                 if self.quiet:
                     continue
                 value = token.text

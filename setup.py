@@ -31,6 +31,6 @@ setup(
     # TODO: This is broken now that I have everything in quietex/__main__.py
     entry_points={"console_scripts": ["quietex=quietex:main"]},
     python_requires=">=3.5",
-    install_requires=["pexpect"],
+    install_requires=["attrs", "pexpect"],
     zip_safe=False,
 )
