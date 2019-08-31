@@ -14,6 +14,7 @@ class LatexLogParser(object):
     PAGE_REGEX = re.compile(r" ?\[(\d+)\]?")
     # Based on https://github.com/olivierverdier/pydflatex/blob/a466693d0184e9b68b4592b829d0272d0aae4e05/pydflatex/latexlogparser.py#L14  # noqa: B950
     OPEN_FILE_REGEX = re.compile(r" ?\((\.?/[^\s(){}]+)")
+    READ_AUX_REGEX = re.compile(r"{[^\s(){}]+}")
     READ_IMAGE_REGEX = re.compile(r" ?<[^\s(){}]+(?: \(.*\))?>")
 
     def _is_warning(self, line: str):
@@ -60,6 +61,7 @@ class LatexLogParser(object):
             if text == "":
                 break
 
+            # TODO: dedupe
             open_match = self.OPEN_FILE_REGEX.match(text)
             if open_match:
                 # Open file at start of text
@@ -73,8 +75,16 @@ class LatexLogParser(object):
                 text = text[1:]
                 continue
 
+            read_aux_match = self.READ_AUX_REGEX.match(text)
+            if read_aux_match:
+                # Read aux at start of text
+                tokens.append(ReadAuxToken(read_aux_match.group()))
+                text = text[read_aux_match.end() :]
+                continue
+
             read_image_match = self.READ_IMAGE_REGEX.match(text)
             if read_image_match:
+                # Read image at start of text
                 tokens.append(ReadImageToken(read_image_match.group()))
                 text = text[read_image_match.end() :]
                 continue

@@ -178,6 +178,30 @@ def test_parse_read_image_in_warning():
     ]
 
 
+def test_parse_read_aux():
+    """Test parsing some read aux messages"""
+    p = LatexLogParser()
+    # TODO: Names with spaces
+    for msg in [
+        "{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}",
+        "{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}",
+    ]:
+        assert p.parse_line(msg) == [ReadAuxToken(msg)]
+
+
+def test_parse_read_aux_in_page():
+    """Test parsing a read aux inside a page number."""
+    p = LatexLogParser()
+    line = "[1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]"
+    assert p.parse_line(line) == [
+        PageToken("[1", "1"),
+        ReadAuxToken(
+            "{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}"
+        ),
+        OtherToken("]"),
+    ]
+
+
 # New output from a simple test document with an error:
 # ! Undefined control sequence.
 # l.6 \badcommand

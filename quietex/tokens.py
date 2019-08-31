@@ -66,7 +66,16 @@ class PageToken(Token):
     __slots__ = ()
 
 
-class ReadImageToken(Token):  # noqa: D101
+class ReadAuxToken(Token):
+    """Read subfont or map file token."""
+
+    __slots__ = ()
+
+    def __init__(self, text):
+        super().__init__(text)
+
+
+class ReadImageToken(Token):
     """Read image or font token.
 
     Never contains other tokens, sometimes contains output from the image loader.

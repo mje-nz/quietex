@@ -55,6 +55,7 @@ def test_print_open_close():
             OpenFileToken("(./test.tex", "./test.tex"),
             CloseFileToken(),
             ReadImageToken("<./test.png>"),
+            ReadAuxToken("{./test.map}"),
         ],
     )
     # Just enough for status line

@@ -39,7 +39,12 @@ class LatexLogFormatter(object):
                 style = Style.BRIGHT + Fore.RED
             elif type(token) is WarningToken:
                 style = Fore.YELLOW
-            elif type(token) in [OpenFileToken, CloseFileToken, ReadImageToken]:
+            elif type(token) in [
+                OpenFileToken,
+                CloseFileToken,
+                ReadImageToken,
+                ReadAuxToken,
+            ]:
                 if self.quiet:
                     continue
                 value = token.text
