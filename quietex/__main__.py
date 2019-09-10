@@ -50,7 +50,10 @@ if (%r or rindex($pdflatex, "pdflatex", 0) == 0) {
 
 def print_latexmkrc(force=False):
     """Print latexmk configuration for using QuieTeX."""
-    print(latexmkrc_template % ("force" if force else 0, sys.argv[0]))
+    cmd = sys.argv[0]
+    if cmd.endswith("__main__.py"):
+        cmd = "python3 -m " + __package__
+    print(latexmkrc_template % ("force" if force else 0, cmd))
 
 
 def print_usage():
