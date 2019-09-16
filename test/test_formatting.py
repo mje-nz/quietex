@@ -1,141 +1,105 @@
 """Tests for formatting module."""
 
-import io
-from unittest.mock import Mock
-
+import blessings
 import pytest
-from colorama import Fore, Style
 
 from quietex.formatting import LatexLogFormatter
-from quietex.input_output import BasicIo
 from quietex.tokens import *  # noqa: F403
 
 
-def test_print_other():
-    """Test printing an uninteresting message."""
-    tty = Mock(BasicIo)
+@pytest.fixture
+def term():
+    """Construct a blessings Terminal that always produces formatting codes."""
+    return blessings.Terminal(kind="xterm-256color", force_styling=True)
+
+
+def test_formatting_empty():
+    """Test formatting an empty list of tokens."""
     f = LatexLogFormatter()
-    f.handle_tokens(tty, [OtherToken("test")])
-    tty.print.assert_any_call("test", end="", style=None)
-    # TODO: Check actual output, not call
+    assert f.process_tokens([]) == ""
 
 
-def test_print_multiple():
-    """Test printing multiple messages."""
-    tty = Mock(BasicIo)
-    f = LatexLogFormatter()
-    f.handle_tokens(tty, [OtherToken("test"), OtherToken("test2")])
-    tty.print.assert_any_call("test", end="", style=None)
-    tty.print.assert_any_call("test2", end="", style=None)
+all_tokens = [
+    CloseFileToken(),
+    ErrorToken("error"),
+    NewlineToken(),
+    OpenFileToken("(./open.tex ", "./open.tex"),
+    OtherToken("other "),
+    PageToken("[1]", "1"),
+    ReadAuxToken("{./aux.map}"),
+    ReadImageToken("<./image.png>"),
+    WarningToken("warning"),
+]
 
 
-def test_print_error():
-    """Test printing an error message."""
-    tty = Mock(BasicIo)
-    f = LatexLogFormatter()
-    f.handle_tokens(tty, [ErrorToken("test")])
-    tty.print.assert_any_call("test", end="", style=Style.BRIGHT + Fore.RED)
+def test_formatting_quiet(term):
+    """Test formatting every kind of token in quiet mode."""
+    f = LatexLogFormatter(term, quiet=True)
+    result = f.process_tokens(all_tokens)
+    expected = term.bright_red("error") + "\nother [1]" + term.yellow("warning")
+    assert result == expected
 
 
-def test_print_warning():
-    """Test printing a warning message."""
-    tty = Mock(BasicIo)
-    f = LatexLogFormatter()
-    f.handle_tokens(tty, [WarningToken("test")])
-    tty.print.assert_any_call("test", end="", style=Fore.YELLOW)
-
-
-def test_print_open_close():
-    """Test (not) printing open/close messages."""
-    tty = Mock(BasicIo)
-    f = LatexLogFormatter()
-    f.handle_tokens(
-        tty,
-        [
-            OpenFileToken("(./test.tex", "./test.tex"),
-            CloseFileToken(),
-            ReadImageToken("<./test.png>"),
-            ReadAuxToken("{./test.map}"),
-        ],
+def test_formatting_verbose(term):
+    """Test formatting every kind of token in verbose mode."""
+    f = LatexLogFormatter(term, quiet=False)
+    result = f.process_tokens(all_tokens)
+    expected = (
+        term.dim(")")
+        + term.bright_red("error")
+        + "\n"
+        + term.dim("(./open.tex ")
+        + "other [1]"
+        + term.dim("{./aux.map}")
+        + term.dim("<./image.png>")
+        + term.yellow("warning")
     )
-    # Just enough for status line
-    tty.print.assert_called_once_with()
+    assert result == expected
 
 
-def test_handle_page_numbers():
-    """Test that handling multiple page tokens sets the page on the io correctly."""
-    tty = Mock(BasicIo)
-    f = LatexLogFormatter()
-    f.handle_tokens(
-        tty,
+def test_process_page_number(term):
+    """Test that processing a page token sets the page correctly."""
+    f = LatexLogFormatter(term)
+    assert f.page is None
+    f.process_tokens([PageToken("[1]", "1")])
+    assert f.page == "1"
+
+
+def test_process_page_numbers(term):
+    """Test that processing multiple page tokens sets the page correctly."""
+    f = LatexLogFormatter(term)
+    assert f.page is None
+    f.process_tokens(
         [
             PageToken("[1]", "1"),
             OpenFileToken("(./test.tex", "./test.tex"),
             CloseFileToken(),
             PageToken("[2]", "2"),
-        ],
+        ]
     )
-    assert tty.page == "2"
+    assert f.page == "2"
 
 
-def test_handling_page_number_updates_status():
-    """Test that handling a page number token causes the status line to be printed."""
-    tty = Mock(BasicIo)
-    f = LatexLogFormatter()
-    f.handle_tokens(tty, [PageToken("[1]", "1")])
-    tty.print.assert_called()
+def test_process_open_files(term):
+    """Test that processing an open file sets the file correctly."""
+    f = LatexLogFormatter(term)
+    assert f.file is None
+    f.process_tokens([OpenFileToken("(./test.tex", "./test.tex")])
+    assert f.file == "./test.tex"
 
 
-def test_handle_open_files():
-    """Test that opening files sets the file on the io."""
-    tty = Mock(BasicIo)
-    f = LatexLogFormatter()
-    f.handle_tokens(tty, [OpenFileToken("(./test.tex", "./test.tex")])
-    assert tty.file == "./test.tex"
+def test_process_open_close_files(term):
+    """Test that processing open and closie files sets the file correctly."""
+    f = LatexLogFormatter(term)
 
+    f.process_tokens([OpenFileToken("(./test.tex", "./test.tex")])
+    assert f.file == "./test.tex"
 
-def test_handle_open_close_files():
-    """Test that opening and closing files sets the file on the io correctly."""
-    tty = Mock(BasicIo)
-    f = LatexLogFormatter()
+    f.process_tokens([OpenFileToken("(./test2.tex", "./test2.tex")])
+    assert f.file == "./test2.tex"
 
-    f.handle_tokens(tty, [OpenFileToken("(./test.tex", "./test.tex")])
-    assert tty.file == "./test.tex"
+    f.process_tokens([CloseFileToken()])
+    assert f.file == "./test.tex"
 
-    f.handle_tokens(tty, [OpenFileToken("(./test2.tex", "./test2.tex")])
-    assert tty.file == "./test2.tex"
-
-    f.handle_tokens(tty, [CloseFileToken()])
-    assert tty.file == "./test.tex"
-
-    f.handle_tokens(tty, [CloseFileToken()])
-    assert tty.file is None
-
-
-# TODO: Dedupe
-class StringBasicIo(BasicIo):
-    """BasicIO which records its outputs in a StringIO."""
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.output = io.StringIO()
-
-    def _write(self, raw_value):
-        return self.output.write(raw_value)
-
-
-def test_print_open_non_quiet():
-    """Test printing an open message with quiet=False."""
-    tty = StringBasicIo(auto_status=False, use_style=False)
-    f = LatexLogFormatter(quiet=False)
-    f.handle_tokens(tty, [OpenFileToken("(./test.tex", "./test.tex")])
-    assert tty.output.getvalue() == "(./test.tex\n"
-
-
-@pytest.mark.skip
-def test_print_open_close_non_quiet():
-    """Test printing an open.close message with quiet=False."""
-    tty = StringBasicIo(auto_status=False, use_style=False)
-    f = LatexLogFormatter(quiet=False)
-    f.handle_tokens(tty, [OpenFileToken("(./test.tex", "./test.tex"), CloseFileToken()])
-    assert tty.output.getvalue() == "(./test.tex)\n"
+    f.process_tokens([CloseFileToken()])
+    assert f.file is None

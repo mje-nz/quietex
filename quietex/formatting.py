@@ -1,59 +1,67 @@
 """Formatting logic for QuieTeX output."""
 
+from collections import defaultdict
 from typing import List
 
-from colorama import Fore, Style
+import blessings
 
-from .input_output import BasicIo
 from .tokens import *  # noqa: F403
+
+
+def hide(value):
+    """Don't print this string (use like a blessings format)."""
+    return ""
 
 
 class LatexLogFormatter(object):
     """Formatter for QuieTeX output."""
 
-    def __init__(self, quiet=True):
-        self.quiet = quiet
+    def __init__(self, terminal=blessings.Terminal(), quiet=True):  # noqa: B008
         self.stack = []
+        self.page = None
+        if quiet:
+            self.style = {
+                CloseFileToken: hide,
+                ErrorToken: terminal.bright_red,
+                OpenFileToken: hide,
+                ReadAuxToken: hide,
+                ReadImageToken: hide,
+                WarningToken: terminal.yellow,
+            }
+        else:
+            self.style = {
+                CloseFileToken: terminal.dim,
+                ErrorToken: terminal.bright_red,
+                OpenFileToken: terminal.dim,
+                ReadAuxToken: terminal.dim,
+                ReadImageToken: terminal.dim,
+                WarningToken: terminal.yellow,
+            }
+        self.style = defaultdict(lambda: (lambda val: val), self.style)
 
-    def process_tokens(self, tty: BasicIo, tokens: List[Token]):
+    @property
+    def file(self):
+        """The file currently being processed."""
+        if len(self.stack) > 0:
+            return self.stack[-1]
+
+    def _format_tokens(self, tokens: List[Token]):
+        """Convert a tokens into a string of their values and formatting codes."""
+        result = ""
+        for token in tokens:
+            result += self.style[type(token)](token.text)
+        return result
+
+    def process_tokens(self, tokens: List[Token]):
         """Process a list of tokens."""
         for token in tokens:
             if type(token) is PageToken:
-                tty.page = token.value
+                self.page = token.value
             elif type(token) is OpenFileToken:
                 self.stack.append(token.value)
-                tty.file = token.value
             elif type(token) is CloseFileToken:
                 try:
                     self.stack.pop()
-                    tty.file = self.stack[-1]
                 except IndexError:
-                    tty.file = None
-
-    def print_tokens(self, tty: BasicIo, tokens: List[Token]):
-        """Print (if appropriate) a list of tokens representing one line."""
-        for token in tokens:
-            value = token.text
-            style = None
-            if type(token) is ErrorToken:
-                style = Style.BRIGHT + Fore.RED
-            elif type(token) is WarningToken:
-                style = Fore.YELLOW
-            elif type(token) in [
-                OpenFileToken,
-                CloseFileToken,
-                ReadImageToken,
-                ReadAuxToken,
-            ]:
-                if self.quiet:
-                    continue
-                value = token.text
-                style = Style.DIM
-            tty.print(value, style=style, end="")
-        # End line
-        tty.print()
-
-    def handle_tokens(self, tty: BasicIo, tokens: List[Token]):
-        """Process and print (if appropriate) a list of tokens representing one line."""
-        self.process_tokens(tty, tokens)
-        self.print_tokens(tty, tokens)
+                    pass
+        return self._format_tokens(tokens)

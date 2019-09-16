@@ -52,6 +52,10 @@ TODO:
 * Add example before/after to readme
 * Show open-files stack before warnings and errors
 * Display page numbers in real-time, before the end of the line
+* Completions for TeX prompt
+* Syntax highlighting for TeX snippets
+* Configurable styles
+* Verbose mode, note about dim on macOS
 
 The approach for colouring `latexmk` messages is inspired by [this Stack Overflow answer](https://tex.stackexchange.com/a/406370).
 The way I've packaged `latexmkrc` is taken straight from [mje-nz/pythontexfigures](https://github.com/mje-nz/pythontexfigure), my library for generating good-looking figures by integrating Python scripts into LaTeX documents.

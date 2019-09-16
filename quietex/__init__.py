@@ -20,19 +20,6 @@ from .parsing import LatexLogParser
 colorama.init()
 
 
-def probably_warning(line: str):
-    """Check if a line of pdflatex output is (probably) a warning message."""
-    if line.startswith("Overfull") or line.startswith("Underfull"):
-        return True
-    line = line.lower()
-    if "warning" in line or "missing" in line:
-        return True
-    if "undefined" in line and "i'll" not in line:
-        # Check for "I'll forget about whatever was undefined." in help text
-        return True
-    return False
-
-
 def handle_prompt(tty: BasicIo, pdflatex: pexpect.spawn):
     """Check if pdflatex has prompted for user input and if so handle it.
 
@@ -79,11 +66,10 @@ def run_command(cmd: list, quiet=True):
     # Run pdflatex and filter/colour output
     pdflatex = pexpect.spawn(cmd[0], cmd[1:], env=env, encoding="utf-8", timeout=0.2)
 
-    # tty = TerminalIo()
-    tty = BasicIo()
-    # TODO: BasicIO works well, but other messages inside open/close don't get the right
-    #   status
-    # TODO: TerminalIO is super broken now
+    tty = TerminalIo()
+    # tty = BasicIo()
+    # TODO: Sometimes misses a bit at the end with a 0.1s sleep.  In quiet mode it
+    #       even prints a fragment at the end!
     tty.status_style = Fore.BLUE
     tty.print("QuieTeX enabled", style=Style.DIM)
 
@@ -102,7 +88,10 @@ def run_command(cmd: list, quiet=True):
             break
 
         # TODO: Page numbers would work better if it parsed the line bit by bit
-        formatter.handle_tokens(tty, parser.parse_line(line.strip("\r\n")))
+        output = formatter.process_tokens(parser.parse_line(line.strip("\r\n")))
+        tty.file = formatter.file
+        tty.page = formatter.page
+        tty.print(output)
 
     # TODO: Only add newline when necessary
     print()
