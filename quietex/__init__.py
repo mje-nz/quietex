@@ -68,8 +68,6 @@ def run_command(cmd: list, quiet=True):
 
     tty = TerminalIo()
     # tty = BasicIo()
-    # TODO: Sometimes misses a bit at the end with a 0.1s sleep.  In quiet mode it
-    #       even prints a fragment at the end!
     tty.status_style = Fore.BLUE
     tty.print("QuieTeX enabled", style=Style.DIM)
 
@@ -92,6 +90,10 @@ def run_command(cmd: list, quiet=True):
         tty.file = formatter.file
         tty.page = formatter.page
         tty.print(output)
+
+        # TODO: If you add a 0.1s delay here, it sometimes misses a bit of output at the
+        #       end.  Could be related to pexpect/pexpect#120 or
+        #       https://pexpect.readthedocs.io/en/stable/commonissues.html#truncated-output-just-before-child-exits  # noqa: B950
 
     # TODO: Only add newline when necessary
     print()

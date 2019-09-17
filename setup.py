@@ -30,6 +30,7 @@ setup(
     packages=["quietex"],
     entry_points={"console_scripts": ["quietex=quietex.__main__:main"]},
     python_requires=">=3.5",
-    install_requires=["attrs", "pexpect"],
+    install_requires=["attrs", "blessings", "colorama", "pexpect"],
+    tests_require=["pyte", "pytest"],
     zip_safe=False,
 )

@@ -26,4 +26,5 @@ repos:
         additional_dependencies:
           - flake8-bugbear
           - flake8-comprehensions
+          - flake8-requirements
       - id: trailing-whitespace

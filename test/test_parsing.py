@@ -277,7 +277,7 @@ def test_parsing_page_number_complex():
     ]:
         tokens = p.parse_line(msg)
         # Expliticly don't check text
-        assert (PageToken, "1") in [(type(token), token.value) for token in tokens]
+        assert (PageToken, "1") in ((type(token), token.value) for token in tokens)
 
 
 def test_parsing_page_number_complex_1():
