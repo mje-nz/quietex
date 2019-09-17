@@ -92,4 +92,5 @@ def main():
         run_command(args)  # quiet=False)
 
 
-main()
+if __name__ == "__main__":
+    main()
