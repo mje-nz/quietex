@@ -8,7 +8,7 @@ import sys
 from colorama import Style
 
 
-class BasicIo(object):
+class BasicIo:  # pylint: disable=too-many-instance-attributes
     """Handle input and output."""
 
     def __init__(self, auto_status=True, use_style=True):
@@ -109,7 +109,7 @@ class TerminalIo(BasicIo):
             # Clear status line first
             self._write(self.CURSOR_TO_START + self.DELETE_WHOLE_LINE)
 
-    def input(self, *args, **kwargs):
+    def input(self, *args, **kwargs):  # pylint: disable=arguments-differ
         """Display a prompt with the given style and return the user's input.
 
         The status line will be cleared if it is displayed, and it will not be

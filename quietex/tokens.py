@@ -1,11 +1,12 @@
 """Tokens for LaTeX log output parser."""
+# pylint: disable=useless-super-delegation
+# Useless delegation in this file is to show which parameters are valid for each type
 
 from attr import attrib, attrs
 
 
-# TODO: {} for reading auxiliary files
 @attrs
-class Token(object):
+class Token:
     """LaTeX log output token."""
 
     text: str = attrib()

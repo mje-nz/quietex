@@ -1,4 +1,5 @@
 """Tests for BasicIo."""
+# pylint: disable=invalid-name,protected-access
 
 import io
 

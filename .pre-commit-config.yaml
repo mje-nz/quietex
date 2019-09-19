@@ -18,6 +18,9 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.2.3
     hooks:
+      - id: check-byte-order-marker
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
       - id: check-merge-conflict
       - id: check-symlinks
       - id: check-yaml
@@ -28,3 +31,7 @@ repos:
           - flake8-comprehensions
           - flake8-requirements
       - id: trailing-whitespace
+  - repo: https://github.com/pre-commit/mirrors-pylint
+    rev: v2.3.1
+    hooks:
+      - id: pylint

@@ -1,4 +1,5 @@
-"""quietex setup."""
+"""QuieTeX setup."""
+# pylint: disable=invalid-name
 from setuptools import setup
 
 with open("Readme.md") as f:

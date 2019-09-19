@@ -1,4 +1,5 @@
 """Tests for formatting module."""
+# pylint: disable=invalid-name,redefined-outer-name
 
 import blessings
 import pytest

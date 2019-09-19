@@ -1,4 +1,5 @@
 """Tests for TerminalIo."""
+# pylint: disable=invalid-name,protected-access
 
 import re
 
@@ -60,7 +61,7 @@ class FakeTerminalIo(TerminalIo):
         `lines` is a list of strings, assert each line of the display is equal to the
         corresponding line from the list.  Line endings will be checked.
         """
-        if type(lines) == str:
+        if isinstance(lines, str):
             lines = [lines]
         for i, line in enumerate(lines):
             expected = line + self.screen.default_char.data

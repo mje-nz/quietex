@@ -11,7 +11,7 @@ import textwrap
 
 from . import run_command
 
-latexmkrc_template = r"""
+LATEXMKRC_TEMPLATE = r"""
 use Term::ANSIColor;
 
 # Make pdflatex output prettier with QuieTeX
@@ -53,7 +53,7 @@ def print_latexmkrc(force=False):
     cmd = sys.argv[0]
     if cmd.endswith("__main__.py"):
         cmd = "python3 -m " + __package__
-    print(latexmkrc_template % ("force" if force else 0, cmd))
+    print(LATEXMKRC_TEMPLATE % ("force" if force else 0, cmd))
 
 
 def print_usage():

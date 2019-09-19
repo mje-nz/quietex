@@ -1,0 +1,17 @@
+[MASTER]
+disable=
+    # Python3 upgrade checks
+    python3,
+    # Fails in pre-commit venv
+    import-error,
+    # Conflicts with or covered by other tools
+    bad-continuation,
+    line-too-long,
+    missing-docstring,
+    ungrouped-imports,
+    wildcard-import,
+    # Annoying
+    fixme,
+    no-self-use,
+    too-few-public-methods,
+    unused-wildcard-import

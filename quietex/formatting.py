@@ -10,13 +10,16 @@ from .tokens import *  # noqa: F403
 
 def hide(value):
     """Don't print this string (use like a blessings format)."""
+    del value
     return ""
 
 
-class LatexLogFormatter(object):
+class LatexLogFormatter:
     """Formatter for QuieTeX output."""
 
-    def __init__(self, terminal=blessings.Terminal(), quiet=True):  # noqa: B008
+    def __init__(self, terminal=None, quiet=True):
+        if terminal is None:
+            terminal = blessings.Terminal()
         self.stack = []
         self.page = None
         if quiet:
@@ -42,8 +45,9 @@ class LatexLogFormatter(object):
     @property
     def file(self):
         """The file currently being processed."""
-        if len(self.stack) > 0:
+        if self.stack:
             return self.stack[-1]
+        return None
 
     def _format_tokens(self, tokens: List[Token]):
         """Convert a tokens into a string of their values and formatting codes."""
@@ -55,11 +59,11 @@ class LatexLogFormatter(object):
     def process_tokens(self, tokens: List[Token]):
         """Process a list of tokens."""
         for token in tokens:
-            if type(token) is PageToken:
+            if isinstance(token, PageToken):
                 self.page = token.value
-            elif type(token) is OpenFileToken:
+            elif isinstance(token, OpenFileToken):
                 self.stack.append(token.value)
-            elif type(token) is CloseFileToken:
+            elif isinstance(token, CloseFileToken):
                 try:
                     self.stack.pop()
                 except IndexError:

@@ -5,7 +5,7 @@ import re
 from .tokens import *  # noqa: F403
 
 
-class LatexLogParser(object):
+class LatexLogParser:
     """LaTeX log parser.
 
     Currently stateless, extracts tokens from one line at a time.
@@ -28,8 +28,9 @@ class LatexLogParser(object):
     def _parse_error_or_warning(self, line):
         if line.startswith("!"):
             return ErrorToken(line)
-        elif self._is_warning(line):
+        if self._is_warning(line):
             return WarningToken(line)
+        return None
 
     def _search_for_token(self, text: str):
         """Find the next token in the text.
@@ -46,7 +47,7 @@ class LatexLogParser(object):
         if page_match:
             matches.append(page_match)
         if not matches:
-            return
+            return None
         matches.sort(key=lambda m: m.start())
         return matches[0]
 
