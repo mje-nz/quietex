@@ -8,6 +8,7 @@ Date: July 2019
 """
 import os
 import sys
+from typing import List
 
 import colorama
 import pexpect
@@ -51,14 +52,15 @@ def handle_prompt(tty: BasicIo, pdflatex: pexpect.spawn):
             prompt = ""
 
 
-def run_command(cmd: list, quiet=True):
+def run_command(cmd: List[str], quiet=True):
     """Run the command, filtering and colouring its output.
 
     The command is assumed to be a pdflatex invocation, but other LaTeX compilers
     probably work too.
 
     Args:
-        cmd (list[str]): Command to run.
+        cmd: Command to run, and its arguments.
+        quiet: Whether to completely hide useless output or just dim it.
     """
     # Disable pdflatex line wrap (where possible)
     env = dict(os.environ, max_print_line="1000000000")
