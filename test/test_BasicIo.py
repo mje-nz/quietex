@@ -2,6 +2,7 @@
 # pylint: disable=invalid-name,protected-access
 
 import io
+from typing import List, Tuple
 
 from colorama import Fore
 
@@ -13,7 +14,7 @@ class FakeIo(BasicIo):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.outputs = []
+        self.outputs: List[Tuple] = []
 
     def _print(self, value, end="\n", style=None):
         self.outputs.append((value, end, style))
@@ -38,7 +39,7 @@ def test_print_status_empty():
 def test_print_status_page_only():
     """Test printing status with no file only prints the page number."""
     o = FakeIo()
-    o.page = 1
+    o.page = "1"
     o.print_status()
     o.assert_last_output("[1]")
 
@@ -54,7 +55,7 @@ def test_print_status_file_only():
 def test_print_status_page_and_file():
     """Test printing status with page number and file."""
     o = FakeIo()
-    o.page = 1
+    o.page = "1"
     o.file = "./test.tex"
     o.print_status()
     o.assert_last_output("[1] (./test.tex)")
@@ -63,7 +64,7 @@ def test_print_status_page_and_file():
 def test_print_status_colour():
     """Test printing status with page number and file."""
     o = FakeIo()
-    o.page = 1
+    o.page = "1"
     o.file = "./test.tex"
     o.status_style = Fore.RED
     o.print_status()
@@ -72,7 +73,7 @@ def test_print_status_colour():
 
 def _test_page_change(o: FakeIo, end="\n"):
     o.print("test 1")
-    o.page = 1
+    o.page = "1"
     o.print("test 2", end=end)
     o.assert_output(0, "test 1")
     o.assert_output(1, "test 2", end)
@@ -153,7 +154,7 @@ def test_print_without_style():
 def test_input_without_style():
     """Test inputting with use_style=False doesn't output colour commands."""
     o = StringBasicIo(use_style=False)
-    o._input = lambda prompt: o._print(prompt) and ""
+    o._input = lambda prompt: o._print(prompt) and ""  # type: ignore
     o.input("test", style=Fore.RED)
     o.assert_printed("test\n")
 
@@ -162,7 +163,7 @@ def test_print_status_without_style():
     """Test printing status line with use_style=False doesn't output colour commands."""
     o = StringBasicIo(use_style=False)
     o.status_style = Fore.BLUE
-    o.page = 1
+    o.page = "1"
     o.file = "./test.tex"
     o.print_status()
     o.assert_printed("[1] (./test.tex)\n")

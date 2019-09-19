@@ -1,7 +1,7 @@
 """Formatting logic for QuieTeX output."""
 
 from collections import defaultdict
-from typing import List
+from typing import List, Optional
 
 import blessings
 
@@ -20,8 +20,8 @@ class LatexLogFormatter:
     def __init__(self, terminal=None, quiet=True):
         if terminal is None:
             terminal = blessings.Terminal()
-        self.stack = []
-        self.page = None
+        self.stack: List[str] = []
+        self.page: Optional[str] = None
         if quiet:
             self.style = {
                 CloseFileToken: hide,

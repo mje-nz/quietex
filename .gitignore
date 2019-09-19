@@ -10,3 +10,4 @@
 /build/
 /dist/
 /pip-wheel-metadata/
+.mypy_cache/

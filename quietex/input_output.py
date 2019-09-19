@@ -4,6 +4,7 @@ Author: Matthew Edwards
 Date: August 2019
 """
 import sys
+from typing import Optional
 
 from colorama import Style
 
@@ -21,11 +22,11 @@ class BasicIo:  # pylint: disable=too-many-instance-attributes
         """
         self.auto_status = auto_status
         self.use_style = use_style
-        self.page = None
-        self.file = None
+        self.page: Optional[str] = None
+        self.file: Optional[str] = None
         self.status_style = None
-        self._last_page = None
-        self._last_file = None
+        self._last_page: Optional[str] = None
+        self._last_file: Optional[str] = None
 
     def _input(self, raw_prompt):
         """Display a prompt and return the user's input."""

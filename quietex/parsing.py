@@ -1,6 +1,7 @@
 """Parser for LaTeX compiler log output."""
 
 import re
+from typing import List
 
 from .tokens import *  # noqa: F403
 
@@ -57,7 +58,7 @@ class LatexLogParser:
         Returns:
             list[Token], str: The tokens and whatever's left at the end.
         """
-        tokens = []
+        tokens: List[Token] = []
         while True:
             if text == "":
                 break
@@ -142,7 +143,7 @@ class LatexLogParser:
         Returns:
             list[Token]: The tokens found in the line.
         """
-        tokens = []
+        tokens: List[Token] = []
 
         # First check for page numbers
         # TODO: Are page numbers the only things that can appear after a warning
@@ -170,7 +171,7 @@ class LatexLogParser:
 
     def parse_text(self, text: str):
         """Parse a block of text (including newlines)."""
-        tokens = []
+        tokens: List[Token] = []
         for line in text.splitlines():
             tokens += self.parse_line(line)
             tokens += [NewlineToken()]

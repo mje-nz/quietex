@@ -2,6 +2,7 @@
 # pylint: disable=invalid-name,protected-access
 
 import re
+from typing import Callable, List
 
 import pyte
 from colorama import Fore
@@ -31,7 +32,7 @@ class FakeTerminalIo(TerminalIo):
         super().__init__()
         self.screen = AtScreen(80, 24)
         self.stream = pyte.Stream(self.screen)
-        self.pre_input_hooks = []
+        self.pre_input_hooks: List[Callable] = []
 
     def _input(self, raw_prompt):
         self._write(raw_prompt)
@@ -150,7 +151,7 @@ def test_full_print_with_status():
     """Test basic use of print with a status line."""
     o = FakeTerminalIo()
     o.print("test1")
-    o.page = 1
+    o.page = "1"
     o.print("test2")
     o.assert_display_like(["test1", "test2", "[1]", ""])
 
@@ -158,7 +159,7 @@ def test_full_print_with_status():
 def test_full_print_multiple_lines_with_status():
     """Test the status line stays at the bottom when multiple lines are printed."""
     o = FakeTerminalIo()
-    o.page = 1
+    o.page = "1"
     o.print("test1")
     o.print("test2")
     o.assert_display_like(["test1", "[1]", "test2", "[1]", ""])
@@ -185,7 +186,7 @@ def test_input():
 def test_input_after_status():
     """Test input prompt prints without status line."""
     o = FakeTerminalIo()
-    o.page = 1
+    o.page = "1"
     o.print("test1")
     o.print("test2")
     o.pre_input_hooks = [
