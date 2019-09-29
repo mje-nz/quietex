@@ -6,10 +6,13 @@ with open("Readme.md") as f:
     readme_lines = f.readlines()
     long_description = "\n".join(readme_lines[: readme_lines.index("## Development\n")])
 
+meta = {}  # type: ignore
+with open("quietex/_meta.py") as fp:
+    exec(fp.read(), meta)  # pylint: disable=exec-used
 
 setup(
     name="quietex",
-    version="0.2.0pre",
+    version=meta["__version__"],
     description="Filter output of pdflatex.",
     long_description=long_description,
     long_description_content_type="text/markdown",

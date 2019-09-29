@@ -14,6 +14,7 @@ import colorama
 import pexpect
 from colorama import Fore, Style
 
+from ._meta import __version__  # noqa: F401
 from .formatting import LatexLogFormatter
 from .input_output import BasicIo, TerminalIo  # noqa: F401
 from .parsing import LatexLogParser
