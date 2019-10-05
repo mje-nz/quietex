@@ -1,4 +1,7 @@
 # QuieTeX
+[![PyPI Package latest release](https://img.shields.io/pypi/v/quietex.svg)](https://pypi.org/project/quietex)
+[![Supported versions](https://img.shields.io/pypi/pyversions/quietex.svg)](https://pypi.org/project/quietex)
+
 Minimal command-line tool which filters and colours the output of `pdflatex` in real-time.
 Not a build tool, doesn't do any clever summaries, just makes it easier to watch.
 
