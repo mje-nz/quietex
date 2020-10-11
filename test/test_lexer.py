@@ -22,6 +22,7 @@ def test_split():
 
 def combine_text(tokens):
     """Combine consecutive Text tokens."""
+    # TODO: TokenMergeFilter?
     out: List[Tuple[Any, str]] = []
     for (tokentype, value) in tokens:
         if tokentype == Text and out and out[-1][0] == Text:
@@ -63,8 +64,8 @@ def test_combine_text():
         "Transcript written on test.log.",
     ),
 )
-def test_parse_text(msg):
-    """Test parsing some uninteresting log messages."""
+def test_lex_text(msg):
+    """Test lexing some uninteresting log messages."""
     assert combine_text(lex(msg)) == [(Text, msg)]
 
 
@@ -72,24 +73,24 @@ def test_parse_text(msg):
     "msg",
     ("(./test.tex", "(/usr/local/texlive/2019/texmf-dist/tex/latex/base/article.cls"),
 )
-def test_parse_file_opening_simple(msg):
-    """Test parsing some simple file open messages."""
+def test_lex_file_opening_simple(msg):
+    """Test lexing some simple file open messages."""
     assert lex(msg) == [(IO.OpenFile, msg.strip())]
 
 
 @pytest.mark.parametrize("msg", (")", " )"))
-def test_parse_file_closing_simple(msg):
-    """Test parsing the simplest file close message."""
+def test_lex_file_closing_simple(msg):
+    """Test lexing the simplest file close message."""
     assert lex(msg) == [(IO.CloseFile, msg)]
 
 
-def test_parse_open_close_file():
-    """Test parsing an open file message followed by a close file message."""
+def test_lex_open_close_file():
+    """Test lexing an open file message followed by a close file message."""
     assert lex("(./test.tex)") == [(IO.OpenFile, "(./test.tex"), (IO.CloseFile, ")")]
 
 
-def test_parse_files_complex():
-    """Test parsing many open/close file messages on one line."""
+def test_lex_files_complex():
+    """Test lexing many open/close file messages on one line."""
     msg = ")) (/usr/a) (/usr/b (/usr/c (/usr/d)) (/usr/e) (/usr/f)) (/usr/g (/usr/h))"
     assert lex(msg) == [
         (IO.CloseFile, ")"),
@@ -121,8 +122,8 @@ def test_parse_files_complex():
     ]
 
 
-def test_parse_message_inside_files():
-    """Test parsing a message hidden amongst open/close file messages."""
+def test_lex_message_inside_files():
+    """Test lexing a message hidden amongst open/close file messages."""
     msg = [
         "(/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp.sty",
         " `Fixed Point Package', Version 0.8, April 2, 1995 (C) Michael Mehlich ",
@@ -160,8 +161,8 @@ def test_parse_message_inside_files():
         )
     ),
 )
-def test_parse_message_followed_by_close(msg):
-    """Test parsing a message hidden amongst open/close file messages.
+def test_lex_message_followed_by_close(msg):
+    """Test lexing a message hidden amongst open/close file messages.
 
     This is basically the last one but with a CloseFile after the message.
     """
@@ -175,8 +176,8 @@ def test_parse_message_followed_by_close(msg):
     ]
 
 
-def test_parse_message_inside_files_fancyvrb():
-    """Test parsing the message from loading fancyvrb, which has brackets in it (!)."""
+def test_lex_message_inside_files_fancyvrb():
+    """Test lexing the message from loading fancyvrb, which has brackets in it (!)."""
     msg = [
         "(/usr/local/texlive/2019/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty",
         " Style option: `fancyvrb' v3.2a <2019/01/15> (tvz)",
@@ -193,8 +194,8 @@ def test_parse_message_inside_files_fancyvrb():
     ]
 
 
-def test_parse_message_inside_files_fancyvrb_minimal():
-    """Test parsing the message from loading fancyvrb, which has brackets in it (!).
+def test_lex_message_inside_files_fancyvrb_minimal():
+    """Test lexing the message from loading fancyvrb, which has brackets in it (!).
 
     Make sure it works without the next open message.
     """
@@ -221,13 +222,13 @@ def test_parse_message_inside_files_fancyvrb_minimal():
         # TODO: Names with spaces
     ),
 )
-def test_parse_read_image(msg):
-    """Test parsing some read images messages"""
+def test_lex_read_image(msg):
+    """Test lexing some read images messages"""
     assert lex(msg) == [(IO.ReadImage, msg)]
 
 
-def test_parse_read_image_in_warning():
-    """Test parsing a read image inside a page number at the end of a warning."""
+def test_lex_read_image_in_warning():
+    """Test lexing a read image inside a page number at the end of a warning."""
     line = r"Underfull \vbox (badness 7963) has occurred while \output is active [2 <./test.png (PNG copy)>]"  # noqa: B950
     assert lex(line) == [
         (
@@ -248,13 +249,13 @@ def test_parse_read_image_in_warning():
         # TODO: Names with spaces
     ),
 )
-def test_parse_read_aux(msg):
-    """Test parsing some read aux messages"""
+def test_lex_read_aux(msg):
+    """Test lexing some read aux messages"""
     assert lex(msg) == [(IO.ReadAux, msg)]
 
 
-def test_parse_read_aux_in_page():
-    """Test parsing a read aux inside a page number."""
+def test_lex_read_aux_in_page():
+    """Test lexing a read aux inside a page number."""
     line = "[1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]"
     assert lex(line) == [
         (State.StartPage, "[1"),
@@ -271,8 +272,8 @@ def test_parse_read_aux_in_page():
 # l.6 \badcommand
 
 
-def test_parse_error():
-    """Test parsing an error message."""
+def test_lex_error():
+    """Test lexing an error message."""
     msg = "! Undefined control sequence."
     assert lex(msg) == [(Generic.Error, msg)]
 
@@ -307,8 +308,8 @@ def test_parse_error():
         "pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist, replaced by a fixed one",  # noqa: B950
     ),
 )
-def test_parse_simple_warnings(msg):
-    """Test parsing simple warning messages."""
+def test_lex_simple_warnings(msg):
+    """Test lexing simple warning messages."""
     assert lex(msg) == [(Generic.Warning, msg)]
 
 
@@ -323,8 +324,8 @@ def test_parse_simple_warnings(msg):
 # \OT1/lmr/bx/n/10.95 H \OT1/lmr/m/n/10.95 = [] [] \OML/lmm/m/it/10.95 :
 
 
-def test_parse_page_number_simple():
-    """Test parsing a simple page number."""
+def test_lex_page_number_simple():
+    """Test lexing a simple page number."""
     assert lex("[1]") == [(State.StartPage, "[1"), (State.EndPage, "]")]
 
 
@@ -339,16 +340,16 @@ def test_parse_page_number_simple():
         # TODO: [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] (./Thesis.toc)  # noqa: B950
     ),
 )
-def test_parsing_page_number_complex(msg):
-    """Test parsing page numbers on the same line as other messages."""
+def test_lexing_page_number_complex(msg):
+    """Test lexing page numbers on the same line as other messages."""
     tokens = lex(msg)
     page_tokens = [(t, v) for (t, v) in tokens if t == State.StartPage]
     assert len(page_tokens) == 1
     assert page_tokens[0][1].strip("[] ") == "1"
 
 
-def test_parsing_page_number_complex_1():
-    """Test parsing a page number inside an open/close file."""
+def test_lexing_page_number_complex_1():
+    """Test lexing a page number inside an open/close file."""
     assert lex("(./Thesis.gls-abr [1])") == [
         (IO.OpenFile, "(./Thesis.gls-abr"),
         (Text, " "),
@@ -358,8 +359,8 @@ def test_parsing_page_number_complex_1():
     ]
 
 
-def test_parsing_page_number_complex_2():
-    """Test parsing a page number at the end of a warning."""
+def test_lexing_page_number_complex_2():
+    """Test lexing a page number at the end of a warning."""
     msg = r"Underfull \vbox (badness 10000) has occurred while \output is active [1]"
     assert lex(msg) == [
         (Generic.Warning, msg[:-3]),
@@ -371,13 +372,13 @@ def test_parsing_page_number_complex_2():
 @pytest.mark.parametrize(
     "msg", ("[Loading MPS to PDF converter (version 2006.09.02).]", " [][][][]")
 )
-def test_parse_page_number_false_positives(msg):
-    """Test parsing things that look like page numbers but aren't."""
+def test_lex_page_number_false_positives(msg):
+    """Test lexing things that look like page numbers but aren't."""
     assert lex(msg) == [(Text, msg)]
 
 
 def test_round_trip():
-    """Test nothing is lost when parsing a typical log."""
+    """Test nothing is lost when lexing a typical log."""
     log = open(Path(__file__).parent / "thesis.log").read()
     for line in log.splitlines():
         assert line == "".join(token[1] for token in lex(line))
