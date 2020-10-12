@@ -7,7 +7,7 @@ from typing import Callable, List
 import pyte
 from colorama import Fore
 
-from quietex.input_output import TerminalFrontend
+from quietex.frontend import TerminalFrontend
 
 
 class AtScreen(pyte.Screen):

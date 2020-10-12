@@ -16,7 +16,7 @@ from colorama import Fore, Style
 
 from ._meta import __version__  # noqa: F401
 from .formatting import LatexLogFormatter
-from .input_output import BasicFrontend, TerminalFrontend  # noqa: F401
+from .frontend import BasicFrontend, TerminalFrontend  # noqa: F401
 from .parsing import LatexLogParser
 
 colorama.init()

@@ -6,7 +6,7 @@ from typing import List, Tuple
 
 from colorama import Fore
 
-from quietex.input_output import BasicFrontend
+from quietex.frontend import BasicFrontend
 
 
 class FakeFrontend(BasicFrontend):
