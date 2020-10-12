@@ -10,6 +10,9 @@ meta = {}  # type: ignore
 with open("quietex/_meta.py") as fp:
     exec(fp.read(), meta)  # pylint: disable=exec-used
 
+tests_require = ["pyte", "pytest"]
+
+
 setup(
     name="quietex",
     version=meta["__version__"],
@@ -35,6 +38,7 @@ setup(
     entry_points={"console_scripts": ["quietex=quietex.__main__:main"]},
     python_requires=">=3.5",
     install_requires=["attrs", "blessings", "colorama", "pexpect", "pygments"],
-    tests_require=["pyte", "pytest"],
+    extras_require={"test": tests_require},
+    tests_require=tests_require,
     zip_safe=False,
 )
