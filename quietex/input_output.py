@@ -9,6 +9,38 @@ from typing import Optional
 from colorama import Style
 
 
+class AppState:
+    """Manage application state and status bar."""
+
+    def __init__(self):
+        self.page: Optional[str] = None
+        self.file: Optional[str] = None
+        self._last_page_printed: Optional[str] = None
+        self._last_file_printed: Optional[str] = None
+
+    def update(self, tokens):
+        """Update current file and page based on tokens to print."""
+        # TODO: also move file stack into here
+
+    def status_dirty(self):
+        """Return whether the status bar has changed since it was last printed."""
+        return (
+            self.page != self._last_page_printed or self.file != self._last_file_printed
+        )
+
+    def format_status(self):
+        """Return the current status bar as a string, and reset dirtiness."""
+        status = ""
+        if self.page:
+            status += f"[{self.page}]"
+        if self.file:
+            status += f" ({self.file})"
+            status = status.strip(" ")
+        self._last_page_printed = self.page
+        self._last_file_printed = self.file
+        return status
+
+
 class BasicFrontend:  # pylint: disable=too-many-instance-attributes
     """Handle input and output."""
 
@@ -22,11 +54,26 @@ class BasicFrontend:  # pylint: disable=too-many-instance-attributes
         """
         self.auto_status = auto_status
         self.use_style = use_style
-        self.page: Optional[str] = None
-        self.file: Optional[str] = None
+        self.state = AppState()
         self.status_style = None
-        self._last_page: Optional[str] = None
-        self._last_file: Optional[str] = None
+
+    @property
+    def page(self):
+        """The page currently being output."""
+        return self.state.page
+
+    @page.setter
+    def page(self, page):
+        self.state.page = page
+
+    @property
+    def file(self):
+        """The file currently being processed."""
+        return self.state.file
+
+    @file.setter
+    def file(self, file):
+        self.state.file = file
 
     def _input(self, raw_prompt):
         """Display a prompt and return the user's input."""
@@ -66,15 +113,8 @@ class BasicFrontend:  # pylint: disable=too-many-instance-attributes
         Returns:
             int: number of characters written.
         """
-        status = ""
-        if self.page:
-            status += f"[{self.page}]"
-        if self.file:
-            status += f" ({self.file})"
-            status = status.strip(" ")
+        status = self.state.format_status()
         length = self._print(status, end=end, style=self.status_style)
-        self._last_page = self.page
-        self._last_file = self.file
         return length
 
     def _flush(self):
@@ -83,8 +123,7 @@ class BasicFrontend:  # pylint: disable=too-many-instance-attributes
     def print(self, value="", end="\n", style: str = None):
         """Print a value, then print the status line if it has changed."""
         length = self._print(value, end, style)
-        status_changed = self.page != self._last_page or self.file != self._last_file
-        if end == "\n" and status_changed and self.auto_status:
+        if end == "\n" and self.state.status_dirty() and self.auto_status:
             length += self.print_status()
         self._flush()
         return length
@@ -126,7 +165,7 @@ class TerminalFrontend(BasicFrontend):
         """
         self._clear_status()
         self._print(value, end, style)
-        if end == "\n" and self.page != self._last_page or self.file != self._last_file:
+        if end == "\n" and self.state.status_dirty():
             self.keep_last_status = True
         self.print_status(end="")
         self._flush()
