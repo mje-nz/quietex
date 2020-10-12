@@ -7,7 +7,7 @@ from typing import Callable, List
 import pyte
 from colorama import Fore
 
-from quietex.input_output import TerminalIo
+from quietex.input_output import TerminalFrontend
 
 
 class AtScreen(pyte.Screen):
@@ -25,7 +25,7 @@ class AtScreen(pyte.Screen):
         self.cursor.attrs = self.default_char
 
 
-class FakeTerminalIo(TerminalIo):
+class FakeTerminalIo(TerminalFrontend):
     """TerminalIO which outputs to a Pyte emulated terminal instead of stdout."""
 
     def __init__(self):

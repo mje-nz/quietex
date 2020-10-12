@@ -9,7 +9,7 @@ from typing import Optional
 from colorama import Style
 
 
-class BasicIo:  # pylint: disable=too-many-instance-attributes
+class BasicFrontend:  # pylint: disable=too-many-instance-attributes
     """Handle input and output."""
 
     def __init__(self, auto_status=True, use_style=True):
@@ -90,7 +90,7 @@ class BasicIo:  # pylint: disable=too-many-instance-attributes
         return length
 
 
-class TerminalIo(BasicIo):
+class TerminalFrontend(BasicFrontend):
     """Handle input from and output to a terminal."""
 
     CURSOR_TO_START = "\x1b[G"

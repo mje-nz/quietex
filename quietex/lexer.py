@@ -130,19 +130,21 @@ def split(line) -> List[str]:
     return list(Splitter.split(line))
 
 
-def _lex(line):
+def _lex(line: str, lexer: LatexLogLexer):
     """Lex a single line of output.
 
     Yields: (tokentype, value)
     """
     for section in Splitter.split(line):
-        for token in LatexLogLexer(ensurenl=False).get_tokens(section):
+        for token in lexer.get_tokens(section):
             yield token
 
 
-def lex(line) -> List[Tuple[Any, str]]:
+def lex(line: str, lexer: LatexLogLexer = None) -> List[Tuple[Any, str]]:
     """Lex a single line of output.
 
     Returns: list of (tokentype, value)
     """
-    return list(_lex(line))
+    if not lexer:
+        lexer = LatexLogLexer(ensurenl=False)
+    return list(_lex(line, lexer))

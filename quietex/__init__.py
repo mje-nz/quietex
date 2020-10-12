@@ -16,13 +16,13 @@ from colorama import Fore, Style
 
 from ._meta import __version__  # noqa: F401
 from .formatting import LatexLogFormatter
-from .input_output import BasicIo, TerminalIo  # noqa: F401
+from .input_output import BasicFrontend, TerminalFrontend  # noqa: F401
 from .parsing import LatexLogParser
 
 colorama.init()
 
 
-def handle_prompt(tty: BasicIo, pdflatex: pexpect.spawn):
+def handle_prompt(tty: BasicFrontend, pdflatex: pexpect.spawn):
     """Check if pdflatex has prompted for user input and if so handle it.
 
     If the "? " prompt is detected, prompt the user for a command (or Ctrl+C or
@@ -69,7 +69,7 @@ def run_command(cmd: List[str], quiet=True):
     # Run pdflatex and filter/colour output
     pdflatex = pexpect.spawn(cmd[0], cmd[1:], env=env, encoding="utf-8", timeout=0.2)
 
-    tty = TerminalIo()
+    tty = TerminalFrontend()
     # tty = BasicIo()
     tty.status_style = Fore.BLUE
     tty.print("QuieTeX enabled", style=Style.DIM)
