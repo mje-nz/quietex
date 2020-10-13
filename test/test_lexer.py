@@ -340,7 +340,7 @@ def test_lex_page_number_simple():
         # TODO: [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] (./Thesis.toc)  # noqa: B950
     ),
 )
-def test_lexing_page_number_complex(msg):
+def test_lex_page_number_complex(msg):
     """Test lexing page numbers on the same line as other messages."""
     tokens = lex(msg)
     page_tokens = [(t, v) for (t, v) in tokens if t == State.StartPage]
@@ -348,7 +348,7 @@ def test_lexing_page_number_complex(msg):
     assert page_tokens[0][1].strip("[] ") == "1"
 
 
-def test_lexing_page_number_complex_1():
+def test_lex_page_number_complex_1():
     """Test lexing a page number inside an open/close file."""
     assert lex("(./Thesis.gls-abr [1])") == [
         (IO.OpenFile, "(./Thesis.gls-abr"),
@@ -359,7 +359,7 @@ def test_lexing_page_number_complex_1():
     ]
 
 
-def test_lexing_page_number_complex_2():
+def test_lex_page_number_complex_2():
     """Test lexing a page number at the end of a warning."""
     msg = r"Underfull \vbox (badness 10000) has occurred while \output is active [1]"
     assert lex(msg) == [

@@ -10,7 +10,8 @@ __all__ = ["LatexLogLexer", "lex", "split"]
 # Tokens
 IO = Generic.IO
 State = Generic.State  # pylint: disable=C0103
-__all__ += ["Generic", "IO", "State", "Text"]
+UI = Generic.UI
+__all__ += ["Generic", "IO", "UI", "State", "Text"]
 
 
 class LatexLogLexer(RegexLexer):
@@ -20,6 +21,9 @@ class LatexLogLexer(RegexLexer):
 
     START_PAGE_RE = r"\[\d+\s?"
     OPEN_FILE_RE = r"\(\.?/[^\s(){}]+"
+
+    def __init__(self, ensurenl=False, **options):
+        super().__init__(ensurenl=ensurenl, **options)
 
     def text_and_close_files(self, match):
         """Callback to lex text followed by close-files."""
@@ -146,5 +150,5 @@ def lex(line: str, lexer: LatexLogLexer = None) -> List[Tuple[Any, str]]:
     Returns: list of (tokentype, value)
     """
     if not lexer:
-        lexer = LatexLogLexer(ensurenl=False)
+        lexer = LatexLogLexer()
     return list(_lex(line, lexer))

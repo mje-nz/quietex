@@ -10,16 +10,10 @@ import os
 import sys
 from typing import List
 
-import colorama
 import pexpect
-from colorama import Fore, Style
 
 from ._meta import __version__  # noqa: F401
-from .formatting import LatexLogFormatter
 from .frontend import BasicFrontend, TerminalFrontend  # noqa: F401
-from .parsing import LatexLogParser
-
-colorama.init()
 
 
 def handle_prompt(tty: BasicFrontend, pdflatex: pexpect.spawn):
@@ -40,7 +34,7 @@ def handle_prompt(tty: BasicFrontend, pdflatex: pexpect.spawn):
         # pdflatex needs a newline after Ctrl+C, so loop until we get a proper
         # response from the user
         try:
-            user_response = tty.input(prompt, style=Fore.RED)
+            user_response = tty.input(prompt)
             pdflatex.send(user_response + "\n")
             return
         except EOFError:
@@ -69,13 +63,9 @@ def run_command(cmd: List[str], quiet=True):
     # Run pdflatex and filter/colour output
     pdflatex = pexpect.spawn(cmd[0], cmd[1:], env=env, encoding="utf-8", timeout=0.2)
 
-    tty = TerminalFrontend()
-    # tty = BasicIo()
-    tty.status_style = Fore.BLUE
-    tty.print("QuieTeX enabled", style=Style.DIM)
-
-    parser = LatexLogParser()
-    formatter = LatexLogFormatter(quiet=quiet)
+    tty = TerminalFrontend(quiet=quiet)
+    # tty = BasicFrontend(quiet=quiet)
+    tty.log("QuieTeX enabled")
 
     while True:
         try:
@@ -89,10 +79,7 @@ def run_command(cmd: List[str], quiet=True):
             break
 
         # TODO: Page numbers would work better if it parsed the line bit by bit
-        output = formatter.process_tokens(parser.parse_line(line.strip("\r\n")))
-        tty.file = formatter.file
-        tty.page = formatter.page
-        tty.print(output)
+        tty.print(line.strip("\r\n"))
 
         # TODO: If you add a 0.1s delay here, it sometimes misses a bit of output at the
         #       end.  Could be related to pexpect/pexpect#120 or

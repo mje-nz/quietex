@@ -1,11 +1,10 @@
-"""Tests for TerminalIo."""
-# pylint: disable=invalid-name,protected-access
+"""Tests for TerminalFrontend."""
+# pylint: disable=protected-access,invalid-name
 
 import re
 from typing import Callable, List
 
 import pyte
-from colorama import Fore
 
 from quietex.frontend import TerminalFrontend
 
@@ -25,8 +24,8 @@ class AtScreen(pyte.Screen):
         self.cursor.attrs = self.default_char
 
 
-class FakeTerminalIo(TerminalFrontend):
-    """TerminalIO which outputs to a Pyte emulated terminal instead of stdout."""
+class FakeTerminalFrontend(TerminalFrontend):
+    """TerminalFrontend which outputs to a Pyte emulated terminal instead of stdout."""
 
     def __init__(self):
         super().__init__()
@@ -51,7 +50,7 @@ class FakeTerminalIo(TerminalFrontend):
         self.stream.feed(raw_value)
         return len(raw_value)
 
-    def assert_cursor(self, x, y):
+    def assert_cursor(self, x, y):  # pylint: disable=invalid-name
         """Assert the cursor is at (`x`, `y`)."""
         assert (self.screen.cursor.x, self.screen.cursor.y) == (x, y)
 
@@ -72,129 +71,103 @@ class FakeTerminalIo(TerminalFrontend):
             ), f"{repr(actual)} should start with {expected}"
 
 
-def test_faketerminalio_write_line():
-    r"""Test FakeTerminalIo.write handles a line terminated by \n properly."""
-    o = FakeTerminalIo()
-    o._write("test\n")
-    o.assert_cursor(0, 1)
+def test_faketerminalfrontend_write_line():
+    r"""Test FakeTerminalFrontend.write handles a line terminated by \n properly."""
+    frontend = FakeTerminalFrontend()
+    frontend._write("test\n")
+    frontend.assert_cursor(0, 1)
 
 
-def test_faketerminalio_write_blank_line():
-    """Test FakeTerminalIo.write handles a line followed by a blank line properly."""
-    o = FakeTerminalIo()
-    o._write("test\n\n")
-    o.assert_cursor(0, 2)
+def test_faketerminalfrontend_write_blank_line():
+    """Test FakeTerminalFrontend.write handles a line followed by a blank line properly."""
+    frontend = FakeTerminalFrontend()
+    frontend._write("test\n\n")
+    frontend.assert_cursor(0, 2)
 
 
-def test_faketerminalio_write_newline():
-    r"""Test FakeTerminalIo.write handles a \n on its own properly."""
-    o = FakeTerminalIo()
-    o._write("test")
-    o._write("\n")
-    o.assert_cursor(0, 1)
+def test_faketerminalfrontend_write_newline():
+    r"""Test FakeTerminalFrontend.write handles a \n on its own properly."""
+    frontend = FakeTerminalFrontend()
+    frontend._write("test")
+    frontend._write("\n")
+    frontend.assert_cursor(0, 1)
 
 
-def test_faketerminalio_write_newlines():
-    r"""Test FakeTerminalIo.write handles multiple \ns on their own properly."""
-    o = FakeTerminalIo()
-    o._write("test")
-    o._write("\n\n")
-    o.assert_cursor(0, 2)
+def test_faketerminalfrontend_write_newlines():
+    r"""Test FakeTerminalFrontend.write handles multiple \ns on their own properly."""
+    frontend = FakeTerminalFrontend()
+    frontend._write("test")
+    frontend._write("\n\n")
+    frontend.assert_cursor(0, 2)
 
 
 def test_print():
-    """Test basic use of _print."""
-    o = FakeTerminalIo()
-    o._print("test")
-    o.assert_display_like("test")
-
-
-def test_print_with_default_end():
-    """Test _print ends with a newline by default."""
-    o = FakeTerminalIo()
-    o._print("test")
-    o.assert_cursor(0, 1)
-
-
-def test_print_with_end():
-    """Test _print with non-default end."""
-    o = FakeTerminalIo()
-    o._print("test", end="2")
-    o.assert_display_like("test2")
-    o.assert_cursor(5, 0)
-
-
-def test_print_with_style():
-    """Test _print with non-default style."""
-    o = FakeTerminalIo()
-    o._print("test", style=Fore.RED)
-    assert {o.screen.buffer[0][i].fg for i in range(4)} == {"red"}
-
-
-def test_full_print():
     """Test basic use of print."""
-    o = FakeTerminalIo()
-    o.print("test")
-    o.assert_display_like(["test", ""])
-    o.assert_cursor(0, 1)
+    frontend = FakeTerminalFrontend()
+    frontend.print("test")
+    frontend.assert_display_like(["test", ""])
+    frontend.assert_cursor(0, 1)
 
 
-def test_full_print_multiple_lines():
+def test_print_multiple_lines():
     """Test printing multiple lines (without status)."""
-    o = FakeTerminalIo()
-    o.print("test1")
-    o.print("test2")
-    o.assert_display_like(["test1", "test2", ""])
+    frontend = FakeTerminalFrontend()
+    frontend.print("test1")
+    frontend.print("test2")
+    frontend.assert_display_like(["test1", "test2", ""])
 
 
-def test_full_print_with_status():
+def test_print_with_status():
     """Test basic use of print with a status line."""
-    o = FakeTerminalIo()
-    o.print("test1")
-    o.page = "1"
-    o.print("test2")
-    o.assert_display_like(["test1", "test2", "[1]", ""])
+    frontend = FakeTerminalFrontend()
+    frontend.print("test1")
+    frontend.print("test2 [1]")
+    frontend.assert_display_like(["test1", "test2 [1]", "[1]", ""])
 
 
-def test_full_print_multiple_lines_with_status():
+def test_print_multiple_lines_with_status():
     """Test the status line stays at the bottom when multiple lines are printed."""
-    o = FakeTerminalIo()
-    o.page = "1"
-    o.print("test1")
-    o.print("test2")
-    o.assert_display_like(["test1", "[1]", "test2", "[1]", ""])
+    frontend = FakeTerminalFrontend()
+    frontend.print("test1 [1]")
+    frontend.print("test2")
+    frontend.assert_display_like(["test1 [1]", "[1]", "test2", "[1]", ""])
 
-    o.print("test3")
-    o.assert_display_like(["test1", "[1]", "test2", "test3", "[1]", ""])
+    frontend.print("test3")
+    frontend.assert_display_like(["test1 [1]", "[1]", "test2", "test3", "[1]", ""])
 
 
 def test_input():
     """Test faking input when no status line has been printed."""
-    o = FakeTerminalIo()
-    o.print("test")
-    o.pre_input_hooks = [
-        lambda: o.assert_display_like(["test", "? ", ""]),
-        lambda: o.assert_cursor(2, 1),
+    frontend = FakeTerminalFrontend()
+    frontend.print("test")
+    frontend.pre_input_hooks = [
+        lambda: frontend.assert_display_like(["test", "? ", ""]),
+        lambda: frontend.assert_cursor(2, 1),
     ]
-    o.input("? ")
-    o.assert_display_like(["test", "? ", ""])
+    frontend.input("? ")
+    frontend.assert_display_like(["test", "? ", ""])
 
-    o.print("test2")
-    o.assert_display_like(["test", "? ", "test2", ""])
+    frontend.print("test2")
+    frontend.assert_display_like(["test", "? ", "test2", ""])
 
 
 def test_input_after_status():
     """Test input prompt prints without status line."""
-    o = FakeTerminalIo()
-    o.page = "1"
-    o.print("test1")
-    o.print("test2")
-    o.pre_input_hooks = [
-        lambda: o.assert_display_like(["test1", "[1]", "test2", "? ", ""]),
-        lambda: o.assert_cursor(2, 3),
+    frontend = FakeTerminalFrontend()
+    frontend.print("test1 [1]")
+    frontend.print("test2")
+    frontend.pre_input_hooks = [
+        lambda: frontend.assert_display_like(["test1 [1]", "[1]", "test2", "? ", ""]),
+        lambda: frontend.assert_cursor(2, 3),
     ]
-    o.input("? ")
-    o.assert_display_like(["test1", "[1]", "test2", "? ", ""])
+    frontend.input("? ")
+    frontend.assert_display_like(["test1 [1]", "[1]", "test2", "? ", ""])
 
-    o.print("test3")
-    o.assert_display_like(["test1", "[1]", "test2", "? ", "test3", "[1]", ""])
+    frontend.print("test3")
+    frontend.assert_display_like(
+        ["test1 [1]", "[1]", "test2", "? ", "test3", "[1]", ""]
+    )
+
+
+# TODO: quiet mode
+# TODO: case where line wraps and \r doesn't work correctly
