@@ -67,6 +67,7 @@ def print_usage():
 
         optional arguments:
           -h, --help            show this help message and exit
+          -q, --quiet           filter out as much output as possible (not just dim)
           -l, --latexmkrc       print latexmkrc
           --latexmkrc-force     print latexmkrc which doesn't check $pdflatex first
         """
@@ -89,7 +90,11 @@ def main():
     elif args[0] == "--latexmkrc-force":
         print_latexmkrc(force=True)
     else:
-        run_command(args)  # quiet=False)
+        quiet = False
+        if args[0] in ("-q", "--quiet"):
+            quiet = True
+            args = args[1:]
+        run_command(args, quiet=quiet)
 
 
 if __name__ == "__main__":

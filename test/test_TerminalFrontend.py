@@ -8,6 +8,13 @@ import pyte
 
 from quietex.frontend import TerminalFrontend
 
+from .test_BasicFrontend import (
+    EXAMPLE_OUTPUT,
+    EXAMPLE_QUIET,
+    EXAMPLE_VERBOSE,
+    _frontend_integration_test,
+)
+
 
 class AtScreen(pyte.Screen):
     """Pyte screen with the background filled with @s for better testing."""
@@ -27,8 +34,8 @@ class AtScreen(pyte.Screen):
 class FakeTerminalFrontend(TerminalFrontend):
     """TerminalFrontend which outputs to a Pyte emulated terminal instead of stdout."""
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.screen = AtScreen(80, 24)
         self.stream = pyte.Stream(self.screen)
         self.pre_input_hooks: List[Callable] = []
@@ -68,7 +75,7 @@ class FakeTerminalFrontend(TerminalFrontend):
             actual = self.screen.display[i]
             assert actual.startswith(
                 expected
-            ), f"{repr(actual)} should start with {expected}"
+            ), f"Failed at {i}, {repr(actual[:len(expected)])} should be {expected}"
 
 
 def test_faketerminalfrontend_write_line():
@@ -169,5 +176,25 @@ def test_input_after_status():
     )
 
 
-# TODO: quiet mode
-# TODO: case where line wraps and \r doesn't work correctly
+def test_log_clears_status():
+    """Test that printing a log message either clears or leaves status correctly."""
+    frontend = FakeTerminalFrontend()
+    frontend.print("test [1]")
+    frontend.log("log")
+    frontend.assert_display_like(["test [1]", "[1]", "log", "[1]", ""])
+    frontend.log("log2")
+    frontend.assert_display_like(["test [1]", "[1]", "log", "log2", "[1]", ""])
+
+
+def test_verbose():
+    """Test printing each type of token in verbose mode."""
+    _frontend_integration_test(FakeTerminalFrontend(), EXAMPLE_OUTPUT, EXAMPLE_VERBOSE)
+
+
+def test_quiet():
+    """Test printing each type of token in quiet mode."""
+    frontend = FakeTerminalFrontend(quiet=True)
+    _frontend_integration_test(frontend, EXAMPLE_OUTPUT, EXAMPLE_QUIET)
+
+
+# TODO: case where the line wraps and \r doesn't work correctly

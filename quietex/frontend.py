@@ -7,7 +7,7 @@ import sys
 from typing import Any, List, Tuple
 
 # pylint: disable=redefined-builtin
-from .formatter import AnsiTerminalFormatter, format
+from .formatter import AnsiTerminalFormatter, format, quiet_filter
 from .lexer import UI, LatexLogLexer, lex
 from .status import AppState
 
@@ -16,6 +16,7 @@ class BasicFrontend:
     """Handle input and output with optional colour but no cursor movement."""
 
     def __init__(self, quiet=False):  # pylint: disable=unused-argument
+        self.quiet = quiet
         self.state = AppState()
         self.lexer = LatexLogLexer()
         self.formatter = AnsiTerminalFormatter()
@@ -36,16 +37,19 @@ class BasicFrontend:
         """
         return sys.stdout.write(raw_value)
 
-    def _print_tokens(self, tokens: List[Tuple[Any, str]]):
+    def _print_tokens(self, tokens: List[Tuple[Any, str]], end="\n"):
         """Highlight and print a list of tokens, updating app state if necessary."""
         self.state.update(tokens)
-        self._write(format(tokens, self.formatter))
+        if self.quiet:
+            tokens = list(quiet_filter(tokens))
+        if tokens:
+            # Skip line if it's now empty
+            self._write(format(tokens, self.formatter) + end)
 
     def print_status(self, end="\n"):
         """Print status bar and reset status bar dirtiness."""
         status = self.state.format_status()
-        self._print_tokens([(UI.Status, status)])
-        self._write(end)
+        self._print_tokens([(UI.Status, status)], end=end)
 
     def _flush(self):
         """Flush output to screen."""
@@ -58,7 +62,6 @@ class BasicFrontend:
     def print(self, value: str):
         """Lex, highlight, and print a line of LaTeX compiler output."""
         self._print_tokens(lex(value, self.lexer))
-        self._write("\n")
         if self.state.status_dirty():
             self.print_status()
         self._flush()
@@ -93,11 +96,17 @@ class TerminalFrontend(BasicFrontend):
         self._clear_status()
         return super().input(*args, **kwargs)
 
+    def log(self, message):
+        """Print a log message."""
+        self._clear_status()
+        super().log(message)
+        self.print_status(end="")
+        self._flush()
+
     def print(self, value="", end="\n"):  # pylint: disable=arguments-differ
         """Lex, highlight, and print a line of LaTeX compiler output."""
         self._clear_status()
         self._print_tokens(lex(value, self.lexer))
-        self._write("\n")
         if end == "\n" and self.state.status_dirty():
             self.keep_last_status = True
         self.print_status(end="")
