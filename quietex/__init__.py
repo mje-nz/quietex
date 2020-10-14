@@ -47,7 +47,7 @@ def handle_prompt(tty: BasicFrontend, pdflatex: pexpect.spawn):
             prompt = ""
 
 
-def run_command(cmd: List[str], quiet=True):
+def run_command(cmd: List[str], **kwargs):
     """Run the command, filtering and colouring its output.
 
     The command is assumed to be a pdflatex invocation, but other LaTeX compilers
@@ -63,7 +63,7 @@ def run_command(cmd: List[str], quiet=True):
     # Run pdflatex and filter/colour output
     pdflatex = pexpect.spawn(cmd[0], cmd[1:], env=env, encoding="utf-8", timeout=0.2)
 
-    tty = TerminalFrontend(quiet=quiet)
+    tty = TerminalFrontend(**kwargs)
     # tty = BasicFrontend(quiet=quiet)
     tty.log("QuieTeX enabled")
 

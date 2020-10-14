@@ -94,7 +94,7 @@ def main():
         if args[0] in ("-q", "--quiet"):
             quiet = True
             args = args[1:]
-        run_command(args, quiet=quiet)
+        run_command(args, quiet=quiet, bell_on_error=True)
 
 
 if __name__ == "__main__":

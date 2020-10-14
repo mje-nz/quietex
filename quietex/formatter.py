@@ -7,7 +7,15 @@ from pygments.formatter import Formatter
 
 from .lexer import *  # noqa: F403
 
-__all__ = ["AnsiTerminalFormatter", "format", "quiet_filter"]
+__all__ = ["AnsiTerminalFormatter", "contains_error", "format", "quiet_filter"]
+
+
+def contains_error(token_source):
+    """Return whether a list of tokens contains an error token."""
+    for token_type, _ in token_source:
+        if token_type == Generic.Error:
+            return True
+    return False
 
 
 def quiet_filter(token_source):

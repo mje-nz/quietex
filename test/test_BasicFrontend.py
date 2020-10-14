@@ -115,3 +115,10 @@ def test_quiet():
     """Test printing each type of token in quiet mode."""
     frontend = StringBasicFrontend(quiet=True)
     _frontend_integration_test(frontend, EXAMPLE_OUTPUT, EXAMPLE_QUIET)
+
+
+def test_error_bell():
+    """Test that printing an error adds a bell character."""
+    frontend = StringBasicFrontend(bell_on_error=True)
+    frontend.print("! Generic error")
+    assert "\a" in frontend.output

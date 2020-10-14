@@ -8,7 +8,7 @@ import sys
 from typing import Any, List, Tuple
 
 # pylint: disable=redefined-builtin
-from .formatter import AnsiTerminalFormatter, format, quiet_filter
+from .formatter import AnsiTerminalFormatter, contains_error, format, quiet_filter
 from .lexer import UI, LatexLogLexer, lex
 from .status import AppState
 
@@ -16,8 +16,9 @@ from .status import AppState
 class BasicFrontend:
     """Handle input and output with optional colour but no cursor movement."""
 
-    def __init__(self, quiet=False):  # pylint: disable=unused-argument
+    def __init__(self, quiet=False, bell_on_error=False):
         self.quiet = quiet
+        self.bell_on_error = bell_on_error
         self.state = AppState()
         self.lexer = LatexLogLexer()
         self.formatter = AnsiTerminalFormatter()
@@ -41,9 +42,12 @@ class BasicFrontend:
 
     def _print_tokens(self, tokens: List[Tuple[Any, str]], end="\n"):
         """Highlight and print a list of tokens, updating app state if necessary."""
+        tokens = list(tokens)
         self.state.update(tokens)
         if self.quiet:
             tokens = list(quiet_filter(tokens))
+        if self.bell_on_error and contains_error(tokens):
+            end += "\a"
         if tokens:
             # Skip line if it's now empty
             self._write(format(tokens, self.formatter) + end)
