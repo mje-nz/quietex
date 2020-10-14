@@ -3,6 +3,7 @@
 Author: Matthew Edwards
 Date: August 2019
 """
+import shutil
 import sys
 from typing import Any, List, Tuple
 
@@ -20,6 +21,7 @@ class BasicFrontend:
         self.state = AppState()
         self.lexer = LatexLogLexer()
         self.formatter = AnsiTerminalFormatter()
+        self.last_status_length = 0
 
     def _input(self, raw_prompt):
         """Display a prompt and return the user's input."""
@@ -49,6 +51,7 @@ class BasicFrontend:
     def print_status(self, end="\n"):
         """Print status bar and reset status bar dirtiness."""
         status = self.state.format_status()
+        self.last_status_length = len(status)
         self._print_tokens([(UI.Status, status)], end=end)
 
     def _flush(self):
@@ -70,12 +73,16 @@ class BasicFrontend:
 class TerminalFrontend(BasicFrontend):
     """Handle input and output with cursor movement and optional colour."""
 
+    CURSOR_UP = "\x1b[A"
     CURSOR_TO_START = "\x1b[G"
     DELETE_WHOLE_LINE = "\x1b[2K"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.keep_last_status = False
+
+    def _get_terminal_width(self):
+        return shutil.get_terminal_size().columns
 
     def _clear_status(self):
         """If the last thing printed was the status line, clear it."""
@@ -84,8 +91,11 @@ class TerminalFrontend(BasicFrontend):
             self._write("\n")
             self.keep_last_status = False
         else:
-            # Clear status line first
+            # Clear status bar first
             self._write(self.CURSOR_TO_START + self.DELETE_WHOLE_LINE)
+            # Clear previous lines if the status bar is more than one line long
+            for _ in range(self.last_status_length // self._get_terminal_width()):
+                self._write(self.CURSOR_UP + self.DELETE_WHOLE_LINE)
 
     def input(self, *args, **kwargs):  # pylint: disable=arguments-differ
         """Display a prompt with the given style and return the user's input.

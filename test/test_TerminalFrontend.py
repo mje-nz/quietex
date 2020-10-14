@@ -57,6 +57,9 @@ class FakeTerminalFrontend(TerminalFrontend):
         self.stream.feed(raw_value)
         return len(raw_value)
 
+    def _get_terminal_width(self):
+        return self.screen.columns
+
     def assert_cursor(self, x, y):  # pylint: disable=invalid-name
         """Assert the cursor is at (`x`, `y`)."""
         assert (self.screen.cursor.x, self.screen.cursor.y) == (x, y)
@@ -71,11 +74,19 @@ class FakeTerminalFrontend(TerminalFrontend):
         if isinstance(lines, str):
             lines = [lines]
         for i, line in enumerate(lines):
-            expected = line + self.screen.default_char.data
             actual = self.screen.display[i]
+            expected = (line + self.screen.default_char.data)[: self.screen.columns]
+
+            # Format display line for assertion failure message
+            try:
+                actual_end_index = actual.index(self.screen.default_char.data)
+            except ValueError:
+                actual_end_index = self.screen.columns
+            actual_to_print = actual[: max(len(expected), actual_end_index)]
+
             assert actual.startswith(
                 expected
-            ), f"Failed at {i}, {repr(actual[:len(expected)])} should be {expected}"
+            ), f"Failed at line {i}, {repr(actual_to_print)} should be {expected}"
 
 
 def test_faketerminalfrontend_write_line():
@@ -106,6 +117,13 @@ def test_faketerminalfrontend_write_newlines():
     frontend._write("test")
     frontend._write("\n\n")
     frontend.assert_cursor(0, 2)
+
+
+def test_faketerminalfrontend_wrap_line():
+    r"""Test FakeTerminalFrontend.write wraps at 80 characters."""
+    frontend = FakeTerminalFrontend()
+    frontend._write("x" * 100)
+    frontend.assert_display_like(["x" * 80, "x" * 20])
 
 
 def test_print():
@@ -197,4 +215,30 @@ def test_quiet():
     _frontend_integration_test(frontend, EXAMPLE_OUTPUT, EXAMPLE_QUIET)
 
 
-# TODO: case where the line wraps and \r doesn't work correctly
+def test_line_wrap():
+    """Test clearing status bars that are so long they wrap around."""
+    frontend = FakeTerminalFrontend()
+    msg = (
+        "(/a/very/long/filename/which/is/so/long/that/it/wraps/around/onto/the/next"
+        "/line/of/the/terminal"
+    )
+    frontend.print(msg)
+    frontend.assert_display_like([msg[:80], msg[80:], msg[:80], msg[80:] + ")"])
+    frontend.print("test")
+    frontend.print("test2")
+    frontend.assert_display_like(
+        [
+            # Original message
+            msg[:80],
+            msg[80:],
+            # Status bar, since it changed
+            msg[:80],
+            msg[80:] + ")",
+            # Plain text
+            "test",
+            "test2",
+            # Status bar
+            msg[:80],
+            msg[80:] + ")",
+        ]
+    )
