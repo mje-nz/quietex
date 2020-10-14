@@ -20,10 +20,11 @@ def contains_error(token_source):
 
 def quiet_filter(token_source):
     """Filter a list of tokens to remove IO message for quiet mode."""
-    for token_type, value in token_source:
-        if IO in (token_type, token_type.parent):
-            continue
-        yield token_type, value
+    return [
+        (token_type, value)
+        for (token_type, value) in token_source
+        if IO not in (token_type, token_type.parent)
+    ]
 
 
 class AnsiTerminalFormatter(Formatter):

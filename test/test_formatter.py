@@ -30,6 +30,7 @@ EXAMPLE_TOKENS = [
     (IO.ReadAux, "{./aux.map}"),
     (IO.ReadImage, "<./image.png>"),
     (Generic.Warning, "warning"),
+    # TODO: UI
 ]
 
 

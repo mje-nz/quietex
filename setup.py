@@ -37,7 +37,7 @@ setup(
     packages=["quietex"],
     entry_points={"console_scripts": ["quietex=quietex.__main__:main"]},
     python_requires=">=3.7",
-    install_requires=["blessings", "pexpect", "pygments"],
+    install_requires=["attrs", "blessings", "pexpect", "pygments"],
     extras_require={"test": tests_require},
     tests_require=tests_require,
     zip_safe=False,

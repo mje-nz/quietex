@@ -122,3 +122,10 @@ def test_error_bell():
     frontend = StringBasicFrontend(bell_on_error=True)
     frontend.print("! Generic error")
     assert "\a" in frontend.output
+
+
+def test_print_partial():
+    """Test that trying to print a partial line does nothing."""
+    frontend = StringBasicFrontend()
+    frontend.print("test", finished=False)
+    assert frontend.output == ""

@@ -1,106 +1,102 @@
 """Tests for status module."""
 
-from quietex.lexer import IO, State
+import pytest
+
+from quietex.lexer import IO, Generic, State, Text
 from quietex.status import AppState
 
-# Basic functionality
+
+def test_create_appstate():
+    """Check initial values on new AppState."""
+    state = AppState()
+    assert state.current_page is None
+    assert state.current_file is None
 
 
-def test_status_empty():
+# Status bar formatting
+
+
+def test_format_status_empty():
     """Test formatting status bar with no current page and file."""
-    app = AppState()
-    assert app.format_status() == ""
+    state = AppState()
+    assert state.format_status() == ""
 
 
-def test_status_page_only():
+def test_format_status_page_only():
     """Test formatting status bar with only a current page."""
-    app = AppState()
-    app.current_page = 1
-    assert app.format_status() == "[1]"
+    state = AppState(current_page=1)
+    assert state.format_status() == "[1]"
 
 
-def test_status_file_only():
+def test_format_status_file_only():
     """Test formatting status bar with only a current file."""
-    app = AppState()
-    app.current_file = "./test.tex"
-    assert app.format_status() == "(./test.tex)"
+    state = AppState(file_stack=["./test.tex"])
+    assert state.format_status() == "(./test.tex)"
 
 
-def test_status_page_and_file():
+def test_format_status_page_and_file():
     """Test formatting status bar with a current page and file."""
-    app = AppState()
-    app.current_page = 1
-    app.current_file = "./test.tex"
-    assert app.format_status() == "[1] (./test.tex)"
-
-
-def test_status_dirty_on_page_change():
-    """Test changing page makes the status dirty."""
-    app = AppState()
-    assert not app.status_dirty()
-    app.current_page = 1
-    assert app.status_dirty()
-    app.format_status()
-    assert not app.status_dirty()
-
-    app.current_page = 2
-    assert app.status_dirty()
-    app.format_status()
-    assert not app.status_dirty()
-
-
-def test_status_dirty_on_file_change():
-    """Test changing file makes the status dirty."""
-    app = AppState()
-    assert not app.status_dirty()
-    app.current_file = "./test.tex"
-    assert app.status_dirty()
-    app.format_status()
-    assert not app.status_dirty()
-
-    app.current_file = "./test2.tex"
-    assert app.status_dirty()
-    app.format_status()
-    assert not app.status_dirty()
+    state = AppState(current_page=1, file_stack=["./test.tex"])
+    assert state.format_status() == "[1] (./test.tex)"
 
 
 # Updating state from tokens
 
 
-def test_process_page():
-    """Test the current page changes when a StartPage token is seen."""
-    app = AppState()
-    assert app.current_page is None
-    app.update([(State.StartPage, "[2 ")])
-    assert app.current_page == 2
+@pytest.mark.parametrize(
+    "token",
+    (
+        (Generic.Error, "error"),
+        (Text, " text "),
+        (State.EndPage, "]"),
+        (IO.ReadAux, "{./aux.map}"),
+        (IO.ReadImage, "<./image.png>"),
+        (Generic.Warning, "warning"),
+    ),
+)
+def test_next_state_no_change(token):
+    """Test that most tokens don't change the state."""
+    state = AppState()
+    next_state = state.update([token])
+    assert next_state == state
 
 
-def test_process_multiple_pages():
-    """Test the current page changes when several StartPage tokens are seen."""
-    app = AppState()
-    app.update(
-        [(State.StartPage, "[1"), (State.EndPage, "]"), (State.StartPage, "[2 ")]
-    )
-    assert app.current_page == 2
+@pytest.mark.parametrize(
+    "tokens",
+    (
+        [(State.StartPage, "[2 ")],
+        [(State.StartPage, "[1"), (State.EndPage, "]"), (State.StartPage, "[2 ")],
+    ),
+)
+def test_next_state_page(tokens):
+    """Test the current page changes when StartPage tokens are seen."""
+    state = AppState()
+    next_state = state.update(tokens)
+    assert next_state.current_page == 2
+    assert next_state != state
 
 
-def test_process_file():
-    """Test the current file changes when an OpenFile token is seen."""
-    app = AppState()
-    assert app.current_file is None
-    app.update([(IO.OpenFile, "(./test.tex")])
-    assert app.current_file == "./test.tex"
+@pytest.mark.parametrize(
+    "tokens,expected_file",
+    (
+        ([(IO.OpenFile, "(./test.tex")], "./test.tex"),
+        ([(IO.OpenFile, "(./test.tex"), (IO.OpenFile, "(./test2.tex")], "./test2.tex"),
+    ),
+)
+def test_next_state_file(tokens, expected_file):
+    """Test the current file changes when OpenFile and CloseFile tokens are seen."""
+    state = AppState()
+    next_state = state.update(tokens)
+    assert next_state.current_file == expected_file
+    assert next_state != state
 
 
-def test_process_open_close_files():
-    """Test the current file changes when a CloseFile token is seen."""
-    app = AppState()
-
-    app.update([(IO.OpenFile, "(./test.tex"), (IO.OpenFile, "(./test2.tex")])
-    assert app.current_file == "./test2.tex"
-
-    app.update([(IO.CloseFile, ")")])
-    assert app.current_file == "./test.tex"
-
-    app.update([(IO.CloseFile, ")")])
-    assert app.current_file is None
+@pytest.mark.parametrize(
+    "tokens", ([(IO.OpenFile, "(./test.tex"), (IO.CloseFile, ")")],)
+)
+def test_next_state_empty_stack(tokens):
+    """Test emptying the file stack."""
+    state = AppState()
+    next_state = state.update(tokens)
+    assert next_state.current_file is None
+    assert next_state == state

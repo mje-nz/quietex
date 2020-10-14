@@ -2,17 +2,18 @@
 
 from typing import List, Optional
 
+import attr
+from attr import attrs
+
 from .lexer import IO, State
 
 
+@attrs(auto_attribs=True, frozen=True)
 class AppState:
     """Manage application state and status bar."""
 
-    def __init__(self):
-        self.current_page: Optional[int] = None
-        self.file_stack: List[str] = []
-        self._last_page_printed: Optional[str] = None
-        self._last_file_printed: Optional[int] = None
+    current_page: Optional[int] = None
+    file_stack: List[str] = attr.Factory(list)
 
     @property
     def current_file(self):
@@ -21,30 +22,21 @@ class AppState:
             return self.file_stack[-1]
         return None
 
-    @current_file.setter
-    def current_file(self, file):
-        """Add a file to the stack."""
-        self.file_stack.append(file)
-
     def update(self, token_source):
         """Update current file and page based on tokens to print."""
+        next_page = self.current_page
+        next_stack = self.file_stack.copy()
         for token_type, value in token_source:
             if token_type == State.StartPage:
-                self.current_page = int(value.strip("[] "))
+                next_page = int(value.strip("[] "))
             elif token_type == IO.OpenFile:
-                self.current_file = value.strip("(")
+                next_stack.append(value.strip("("))
             elif token_type == IO.CloseFile:
                 try:
-                    self.file_stack.pop()
+                    next_stack.pop()
                 except IndexError:
                     pass
-
-    def status_dirty(self):
-        """Return whether the status bar has changed since it was last printed."""
-        return (
-            self.current_page != self._last_page_printed
-            or self.current_file != self._last_file_printed
-        )
+        return AppState(next_page, next_stack)
 
     def format_status(self):
         """Return the current status bar as a string, and reset dirtiness."""
@@ -54,6 +46,4 @@ class AppState:
         if self.current_file:
             status += f" ({self.current_file})"
             status = status.strip(" ")
-        self._last_page_printed = self.current_page
-        self._last_file_printed = self.current_file
         return status

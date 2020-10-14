@@ -22,7 +22,6 @@ class BasicFrontend:
         self.state = AppState()
         self.lexer = LatexLogLexer()
         self.formatter = AnsiTerminalFormatter()
-        self.last_status_length = 0
 
     def _input(self, raw_prompt):
         """Display a prompt and return the user's input."""
@@ -42,20 +41,19 @@ class BasicFrontend:
 
     def _print_tokens(self, tokens: List[Tuple[Any, str]], end="\n"):
         """Highlight and print a list of tokens, updating app state if necessary."""
-        tokens = list(tokens)
-        self.state.update(tokens)
         if self.quiet:
-            tokens = list(quiet_filter(tokens))
+            tokens = quiet_filter(tokens)
         if self.bell_on_error and contains_error(tokens):
             end += "\a"
         if tokens:
-            # Skip line if it's now empty
+            # Skip line if it's now empty to avoid lone newline
+            # TODO: that's probably the wrong thing
             self._write(format(tokens, self.formatter) + end)
+            self._flush()  # In case end is ""
+        length = len("".join(value for (_, value) in tokens))
+        return length
 
-    def print_status(self, end="\n"):
-        """Print status bar and reset status bar dirtiness."""
-        status = self.state.format_status()
-        self.last_status_length = len(status)
+    def _print_status(self, status, end="\n"):
         self._print_tokens([(UI.Status, status)], end=end)
 
     def _flush(self):
@@ -66,12 +64,21 @@ class BasicFrontend:
         """Print a log message."""
         self._print_tokens([(UI.LogMessage, message)])
 
-    def print(self, value: str):
-        """Lex, highlight, and print a line of LaTeX compiler output."""
-        self._print_tokens(lex(value, self.lexer))
-        if self.state.status_dirty():
-            self.print_status()
-        self._flush()
+    def print(self, value: str, finished=True):
+        """Lex, highlight, and print a line of LaTeX compiler output.
+
+        Args:
+            value: Line of LaTeX compiler output to print.
+            finished: Whether the line is complete, i.e., ended in a newline.
+        """
+        if not finished:
+            return
+        tokens = lex(value, self.lexer)
+        self._print_tokens(tokens)
+        new_state = self.state.update(tokens)
+        if new_state != self.state:
+            self._print_status(new_state.format_status())
+            self.state = new_state
 
 
 class TerminalFrontend(BasicFrontend):
@@ -84,22 +91,29 @@ class TerminalFrontend(BasicFrontend):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.keep_last_status = False
+        self.last_line_length = None
 
     def _get_terminal_width(self):
         return shutil.get_terminal_size().columns
 
     def _clear_status(self):
-        """If the last thing printed was the status line, clear it."""
+        """Clear the status bar (unless marked keep) and last line (if not finished)."""
         if self.keep_last_status:
             # Finish status line first
             self._write("\n")
             self.keep_last_status = False
         else:
-            # Clear status bar first
+            last_status_length = len(self.state.format_status())
+            # Status bar doesn't end in a newlineClear status bar first
             self._write(self.CURSOR_TO_START + self.DELETE_WHOLE_LINE)
             # Clear previous lines if the status bar is more than one line long
-            for _ in range(self.last_status_length // self._get_terminal_width()):
+            for _ in range(last_status_length // self._get_terminal_width()):
                 self._write(self.CURSOR_UP + self.DELETE_WHOLE_LINE)
+
+            # Also clear last line printed if it wasn't finished
+            if self.last_line_length:
+                for _ in range(self.last_line_length // self._get_terminal_width() + 1):
+                    self._write(self.CURSOR_UP + self.DELETE_WHOLE_LINE)
 
     def input(self, *args, **kwargs):  # pylint: disable=arguments-differ
         """Display a prompt with the given style and return the user's input.
@@ -114,14 +128,19 @@ class TerminalFrontend(BasicFrontend):
         """Print a log message."""
         self._clear_status()
         super().log(message)
-        self.print_status(end="")
-        self._flush()
+        self._print_status(self.state.format_status(), end="")
 
-    def print(self, value="", end="\n"):  # pylint: disable=arguments-differ
+    def print(self, value="", finished=True):  # pylint: disable=arguments-differ
         """Lex, highlight, and print a line of LaTeX compiler output."""
         self._clear_status()
-        self._print_tokens(lex(value, self.lexer))
-        if end == "\n" and self.state.status_dirty():
+        tokens = lex(value, self.lexer)
+        length = self._print_tokens(tokens)
+        new_state = self.state.update(tokens)
+        self._print_status(new_state.format_status(), end="")
+        if finished:
+            self.last_line_length = None
+        else:
+            self.last_line_length = length
+        if finished and new_state != self.state:
+            self.state = new_state
             self.keep_last_status = True
-        self.print_status(end="")
-        self._flush()

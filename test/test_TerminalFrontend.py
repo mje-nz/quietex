@@ -64,7 +64,7 @@ class FakeTerminalFrontend(TerminalFrontend):
         """Assert the cursor is at (`x`, `y`)."""
         assert (self.screen.cursor.x, self.screen.cursor.y) == (x, y)
 
-    def assert_display_like(self, lines):
+    def assert_display_like(self, lines, message=None):
         """Make an assertion about what's on the display.
 
         If `lines` is a string, assert the first line of the display is equal to it.  If
@@ -83,10 +83,10 @@ class FakeTerminalFrontend(TerminalFrontend):
             except ValueError:
                 actual_end_index = self.screen.columns
             actual_to_print = actual[: max(len(expected), actual_end_index)]
-
-            assert actual.startswith(
-                expected
-            ), f"Failed at line {i}, {repr(actual_to_print)} should be {expected}"
+            error = f"Failed at line {i}, {repr(actual_to_print)} should be {expected}"
+            if message is not None:
+                error = f"{message}: {error}"
+            assert actual.startswith(expected), error
 
 
 def test_faketerminalfrontend_write_line():
@@ -242,3 +242,49 @@ def test_line_wrap():
             msg[80:] + ")",
         ]
     )
+
+
+def test_print_partial_simple():
+    """Test printing partial lines with a simple example."""
+    frontend = FakeTerminalFrontend()
+    frontend.print("Partial", finished=False)
+    frontend.assert_display_like("Partial", "")
+
+    frontend.print("Full")
+    frontend.assert_display_like("Full", "")
+
+
+def test_print_partial_complex():
+    """Test printing partial lines with a long example including status changes."""
+    frontend = FakeTerminalFrontend()
+    msg = "(./test.tex [1] (./test2.tex test message [2]))"
+    for i in range(1, 4):
+        # No valid file yet
+        frontend.print(msg[:i], finished=False)
+        frontend.assert_display_like([msg[:i], ""], i)
+    for i in range(4, 12):
+        # Part-way through test.tex
+        frontend.print(msg[:i], finished=False)
+        frontend.assert_display_like([msg[:i], msg[:i] + ")", ""], i)
+    for i in range(12, 14):
+        # Part-way through start page
+        frontend.print(msg[:i], finished=False)
+        frontend.assert_display_like([msg[:i], "(./test.tex)", ""], i)
+    for i in range(21, 29):
+        # Partway through second file
+        frontend.print(msg[:i], finished=False)
+        frontend.assert_display_like([msg[:i], msg[12:i] + ")", ""], i)
+    for i in range(29, 44):
+        # Not up to second page yet
+        frontend.print(msg[:i], finished=False)
+        frontend.assert_display_like([msg[:i], "[1] (./test2.tex)", ""], i)
+    for i in range(44, 45):
+        # Not up to close files yet
+        frontend.print(msg[:i], finished=False)
+        frontend.assert_display_like([msg[:i], "[2] (./test2.tex)", ""], i)
+    # Close second file
+    frontend.print(msg[:-1], finished=False)
+    frontend.assert_display_like([msg[:-1], "[2] (./test.tex)", ""])
+    # Close first file
+    frontend.print(msg)
+    frontend.assert_display_like([msg, "[2]", ""])
