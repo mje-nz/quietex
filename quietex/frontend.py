@@ -37,28 +37,27 @@ class BasicFrontend:
         Returns:
             int: number of characters written.
         """
-        return sys.stdout.write(raw_value)
+        sys.stdout.write(raw_value)
+        sys.stdout.flush()  # Make sure lines without newlines are printed
 
     def _print_tokens(self, tokens: List[Tuple[Any, str]], end="\n"):
         """Highlight and print a list of tokens, updating app state if necessary."""
+        if not tokens:
+            # Make sure blank lines get printed
+            self._write(end)
+            return 0
         if self.quiet:
             tokens = quiet_filter(tokens)
         if self.bell_on_error and contains_error(tokens):
             end += "\a"
         if tokens:
             # Skip line if it's now empty to avoid lone newline
-            # TODO: that's probably the wrong thing
             self._write(format(tokens, self.formatter) + end)
-            self._flush()  # In case end is ""
         length = len("".join(value for (_, value) in tokens))
         return length
 
     def _print_status(self, status, end="\n"):
         self._print_tokens([(UI.Status, status)], end=end)
-
-    def _flush(self):
-        """Flush output to screen."""
-        return sys.stdout.flush()
 
     def log(self, message):
         """Print a log message."""
