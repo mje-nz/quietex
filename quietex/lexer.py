@@ -152,3 +152,7 @@ def lex(line: str, lexer: LatexLogLexer = None) -> List[Tuple[Any, str]]:
     if not lexer:
         lexer = LatexLogLexer()
     return list(_lex(line, lexer))
+
+
+# TODO: refer to Latex-Workshop's log parser
+# https://github.com/James-Yu/LaTeX-Workshop/blob/7f1ffbe325041306f9f4048df7c9756dff3de6a2/src/components/parser/log.ts#L131

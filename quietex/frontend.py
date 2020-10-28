@@ -7,6 +7,8 @@ import shutil
 import sys
 from typing import Any, List, Tuple
 
+from pygments.formatters import NullFormatter
+
 # pylint: disable=redefined-builtin
 from .formatter import AnsiTerminalFormatter, contains_error, format, quiet_filter
 from .lexer import UI, LatexLogLexer, lex
@@ -16,12 +18,15 @@ from .status import AppState
 class BasicFrontend:
     """Handle input and output with optional colour but no cursor movement."""
 
-    def __init__(self, quiet=False, bell_on_error=False):
+    def __init__(self, color=True, quiet=False, bell_on_error=False):
         self.quiet = quiet
         self.bell_on_error = bell_on_error
         self.state = AppState()
         self.lexer = LatexLogLexer()
-        self.formatter = AnsiTerminalFormatter()
+        if color:
+            self.formatter = AnsiTerminalFormatter()
+        else:
+            self.formatter = NullFormatter()
 
     def _input(self, raw_prompt):
         """Display a prompt and return the user's input."""

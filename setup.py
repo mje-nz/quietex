@@ -35,7 +35,7 @@ setup(
         "Topic :: Text Processing :: Markup :: LaTeX",
     ],
     packages=["quietex"],
-    entry_points={"console_scripts": ["quietex=quietex.__main__:main"]},
+    entry_points={"console_scripts": ["quietex=quietex.cli:main"]},
     python_requires=">=3.7",
     install_requires=["attrs", "blessings", "pexpect", "pygments"],
     extras_require={"test": tests_require},

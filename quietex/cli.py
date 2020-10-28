@@ -1,15 +1,8 @@
-#!/usr/bin/env python3
-"""Filter and colour output of pdflatex.
-
-Usage: quietex.py <latex engine> <options> <file>
-
-Author: Matthew Edwards
-Date: July 2019
-"""
+import os
 import sys
 import textwrap
 
-from . import run_command
+from .main import run_command
 
 LATEXMKRC_TEMPLATE = r"""
 use Term::ANSIColor;
@@ -51,7 +44,7 @@ if (%r or rindex($pdflatex, "pdflatex", 0) == 0) {
 def print_latexmkrc(force=False):
     """Print latexmk configuration for using QuieTeX."""
     cmd = sys.argv[0]
-    if cmd.endswith("__main__.py"):
+    if cmd.endswith("cli.py"):
         cmd = "python3 -m " + __package__
     print(LATEXMKRC_TEMPLATE % ("force" if force else 0, cmd))
 
@@ -94,8 +87,6 @@ def main():
         if args[0] in ("-q", "--quiet"):
             quiet = True
             args = args[1:]
-        run_command(args, quiet=quiet, bell_on_error=True)
-
-
-if __name__ == "__main__":
-    main()
+        color = "NO_COLOR" not in os.environ
+        return_code = run_command(args, color=color, quiet=quiet, bell_on_error=True)
+        sys.exit(return_code)
