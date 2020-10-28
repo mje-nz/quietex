@@ -462,3 +462,12 @@ pdftex/updmap/pdftex.map}] (./test.aux) )</usr/local/texlive/2019/texmf-dist/fon
 type1/public/amsfonts/cm/cmr10.pfb>""".replace(
     "\n", ""
 )
+
+
+# TODO: get the noise in this to lex
+"""(see the transcript file for additional information)
+{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}
+</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb>
+""".replace(
+    "\n", ""
+)

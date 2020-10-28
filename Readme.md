@@ -59,6 +59,9 @@ TODO:
 * Syntax highlighting for TeX snippets
 * Configurable styles
 * Verbose mode, note about dim on macOS
+* Collapse multiple blank lines, maybe remove all blank lines between single-line warnings
+* Recognise multi-line warnings with (package name) continuations
+* Highlight "Output written on" message
 
 The approach for colouring `latexmk` messages is inspired by [this Stack Overflow answer](https://tex.stackexchange.com/a/406370).
 The way I've packaged `latexmkrc` is taken straight from [mje-nz/pythontexfigures](https://github.com/mje-nz/pythontexfigure), my library for generating good-looking figures by integrating Python scripts into LaTeX documents.
