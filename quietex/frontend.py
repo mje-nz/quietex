@@ -61,7 +61,7 @@ class BasicFrontend:
 
     def log(self, message):
         """Print a log message."""
-        self._print_tokens([(UI.LogMessage, message)])
+        self._print_tokens([(UI.Message, message)])
 
     def print(self, value: str, finished=True):
         """Lex, highlight, and print a line of LaTeX compiler output.
