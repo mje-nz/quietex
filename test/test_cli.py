@@ -9,7 +9,7 @@ from typing import List
 import pytest
 
 import quietex
-from quietex.__main__ import main
+from quietex.cli import main
 
 
 def remove_control_sequences(line: str):
