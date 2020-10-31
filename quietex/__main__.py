@@ -48,9 +48,8 @@ if (%r or rindex($pdflatex, "pdflatex", 0) == 0) {
 """
 
 
-def print_latexmkrc(force=False):
+def print_latexmkrc(cmd, force=False):
     """Print latexmk configuration for using QuieTeX."""
-    cmd = sys.argv[0]
     if cmd.endswith("__main__.py"):
         cmd = "python3 -m " + __package__
     print(LATEXMKRC_TEMPLATE % ("force" if force else 0, cmd))
@@ -75,20 +74,22 @@ def print_usage():
     )
 
 
-def main():
+def main(args=None):
     """Handle command line arguments."""
     # Can't use argparse as it chokes on unrecognised options, so parse args manually
-    if len(sys.argv) < 2:
+    if args is None:
+        args = sys.argv
+    if len(args) < 2:
         print_usage()
         sys.exit(-1)
 
-    args = sys.argv[1:]
+    cmd, *args = args
     if args[0] in ("-h", "--help"):
         print_usage()
     elif args[0] in ("-l", "--latexmkrc"):
-        print_latexmkrc()
+        print_latexmkrc(cmd)
     elif args[0] == "--latexmkrc-force":
-        print_latexmkrc(force=True)
+        print_latexmkrc(cmd, force=True)
     else:
         quiet = False
         if args[0] in ("-q", "--quiet"):

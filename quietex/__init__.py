@@ -89,4 +89,5 @@ def run_command(cmd: List[str], **kwargs):
     print()
 
     pdflatex.close()
-    sys.exit(pdflatex.exitstatus)
+    if pdflatex.exitstatus != 0:
+        sys.exit(pdflatex.exitstatus)
