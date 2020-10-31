@@ -1,0 +1,10 @@
+coverage:
+  status:
+    project:
+      src:
+        paths:
+          - src
+      tests:
+        paths:
+          - test
+        threshold: 0%
