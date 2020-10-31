@@ -10,7 +10,7 @@ meta = {}  # type: ignore
 with open("quietex/_meta.py") as fp:
     exec(fp.read(), meta)  # pylint: disable=exec-used
 
-tests_require = ["pyte", "pytest"]
+tests_require = ["pyte", "pytest", "pytest-cov"]
 
 
 setup(

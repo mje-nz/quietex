@@ -20,7 +20,10 @@ jobs:
         python -m pip install .[test]
     - name: Test with pytest
       run: |
-        pytest
+        pytest --cov=./ --cov-report=xml
+    - name: Upload coverage
+      uses: codecov/codecov-action@v1
+
 
   run-pre-commit-checks:
     runs-on: ubuntu-latest
