@@ -42,6 +42,13 @@ def test_formatting_quiet(term):
     assert result == expected
 
 
+def test_log_quiet(term):
+    """Make sure log messages are filtered in quiet mode."""
+    formatter = AnsiTerminalFormatter(term)
+    result = format(quiet_filter([(UI.Message, "log"), (Text, "text")]), formatter)
+    assert result == "text"
+
+
 def test_formatting_verbose(term):
     """Test formatting every kind of token in verbose mode."""
     formatter = AnsiTerminalFormatter(term)

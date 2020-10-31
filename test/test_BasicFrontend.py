@@ -87,6 +87,9 @@ EXAMPLE_VERBOSE = [
     "[2] (./open.tex)",
     ")",
     "[2]",
+    "Log message",
+    "? ",
+    "",
 ]
 EXAMPLE_QUIET = [
     " ",
@@ -98,6 +101,8 @@ EXAMPLE_QUIET = [
     "warning [2]",
     "[2] (./open.tex)",
     "[2]",
+    "? ",
+    "",
 ]
 
 
@@ -106,7 +111,7 @@ def _frontend_integration_test(frontend, output: List[str], expected: List[str])
         frontend.print(line)
     frontend.log("Log message")
     frontend.input("? ")
-    frontend.assert_display_like(expected + ["Log message", "? ", ""])
+    frontend.assert_display_like(expected)
 
 
 def test_verbose():

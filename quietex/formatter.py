@@ -23,7 +23,7 @@ def quiet_filter(token_source):
     return [
         (token_type, value)
         for (token_type, value) in token_source
-        if IO not in (token_type, token_type.parent)
+        if IO not in (token_type, token_type.parent) and token_type != UI.Message
     ]
 
 
