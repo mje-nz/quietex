@@ -1,11 +1,14 @@
 """Tests for command-line interface."""
 # pylint: disable=redefined-outer-name
+import importlib.resources as pkg_resources
 import re
 import subprocess
+from pathlib import Path
 from typing import List
 
 import pytest
 
+import quietex
 from quietex.__main__ import main
 
 
@@ -56,3 +59,22 @@ def test_latexmkrc(run_quietex):
     """Test that quietex --latexmkrc prints something vaguely correct."""
     output = run_quietex(["--latexmkrc"])
     assert re.search(r'\$pdflatex = ".*?quietex \$pdflatex"', output)
+
+
+# pylint: disable=invalid-name
+installed_only = pytest.mark.skipif(
+    Path(quietex.__file__) == Path(__file__).parent.parent / "src/quietex/__init__.py",
+    reason="installed package only",
+)
+
+
+@installed_only
+def test_sentinel_file_missing():
+    """Test that when quietex is installed, the sentinel file is missing.
+
+    This is to make sure we're definitely running tests against the installed version
+    (not against the source or an editable install), since the sentinel file doesn't
+    make it into the wheel.
+    """
+    with pytest.raises(FileNotFoundError):
+        pkg_resources.read_text(quietex, "sentinel.txt")

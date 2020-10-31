@@ -1,0 +1,2 @@
+This file is not included in the package, in order to have something to test for the
+absence of to make sure importlib.resources does what I think it does.

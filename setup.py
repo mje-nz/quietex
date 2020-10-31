@@ -7,7 +7,7 @@ with open("Readme.md") as f:
     long_description = "\n".join(readme_lines[: readme_lines.index("## Development\n")])
 
 meta = {}  # type: ignore
-with open("quietex/_meta.py") as fp:
+with open("src/quietex/_meta.py") as fp:
     exec(fp.read(), meta)  # pylint: disable=exec-used
 
 tests_require = ["pyte", "pytest", "pytest-cov"]
@@ -35,10 +35,11 @@ setup(
         "Topic :: Text Processing :: Markup :: LaTeX",
     ],
     packages=["quietex"],
+    package_dir={"": "src"},
     entry_points={"console_scripts": ["quietex=quietex.__main__:main"]},
     python_requires=">=3.7",
     install_requires=["attrs", "blessings", "pexpect", "pygments"],
     extras_require={"test": tests_require},
     tests_require=tests_require,
-    zip_safe=False,
+    zip_safe=True,
 )

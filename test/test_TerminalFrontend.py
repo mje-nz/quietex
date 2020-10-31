@@ -7,8 +7,7 @@ from typing import Callable, List
 import pyte
 
 from quietex.frontend import TerminalFrontend
-
-from .test_BasicFrontend import (
+from test.test_BasicFrontend import (
     EXAMPLE_OUTPUT,
     EXAMPLE_QUIET,
     EXAMPLE_VERBOSE,
