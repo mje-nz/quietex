@@ -6,53 +6,19 @@ Usage: quietex.py <latex engine> <options> <file>
 Author: Matthew Edwards
 Date: July 2019
 """
+import importlib.resources as pkg_resources
 import sys
 import textwrap
 
 from . import run_command
 
-LATEXMKRC_TEMPLATE = r"""
-use Term::ANSIColor;
-
-# Make pdflatex output prettier with QuieTeX
-if (%r or rindex($pdflatex, "pdflatex", 0) == 0) {
-    $pdflatex = "%s $pdflatex";
-} else {
-    # $pdflatex doesn't start with "pdflatex", which means there's some other
-    # customisation in latexmkrc already
-    my $msg = 'It looks like $pdflatex is already customized in your latexmkrc, so ' .
-        'QuieTeX will not insert itself.  To override this check, use ' .
-        '`quietex --latexmkrc-force`.';
-    if (-t STDERR) {
-        # Only use color if a terminal is attached
-        $msg = colored($msg, 'yellow')
-    }
-    print STDERR $msg, "\n";
-}
-
-
-# Colour "Running pdflatex" etc messages
-{
-    no warnings 'redefine';
-    my $old_warn_running = \&main::warn_running;
-    sub color_warn_running {
-        print STDERR color('green');
-        $old_warn_running->(@_);
-        print STDERR color('reset');
-    }
-    if (-t STDERR) {
-        # Only use color if a terminal is attached
-        *main::warn_running = \&color_warn_running;
-    }
-}
-"""
-
 
 def print_latexmkrc(cmd, force=False):
     """Print latexmk configuration for using QuieTeX."""
+    template = pkg_resources.read_text("quietex", "latexmkrc")
     if cmd.endswith("__main__.py"):
         cmd = "python3 -m " + __package__
-    print(LATEXMKRC_TEMPLATE % ("force" if force else 0, cmd))
+    print(template % dict(force=("force" if force else 0), cmd=cmd))
 
 
 def print_usage():
