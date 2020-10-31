@@ -1,5 +1,5 @@
 """Tests for command-line interface."""
-# pylint: disable=redefined-outer-name
+# pylint: disable=redefined-outer-name,unused-argument
 import importlib.resources as pkg_resources
 import re
 import subprocess
@@ -19,7 +19,7 @@ def remove_control_sequences(line: str):
     return ansi_escape.sub("", line)
 
 
-def _run_external(cmd: List[str]) -> str:
+def run(cmd: List[str]) -> str:
     """Run a command in a subprocess, check it succeeds, and return its stdout."""
     return subprocess.run(cmd, text=True, check=True, capture_output=True).stdout
 
@@ -40,10 +40,10 @@ def run_quietex(request, capsys):
     """Run quietex, repeating the test for each way of running it."""
     if request.param == "script":
         # Run `quietex` on the command line
-        yield lambda args: _run_external(["quietex"] + args)
+        yield lambda args: run(["quietex"] + args)
     elif request.param == "module":
         # Run `python -m quietex` on the command line
-        yield lambda args: _run_external(["python", "-m", "quietex"] + args)
+        yield lambda args: run(["python", "-m", "quietex"] + args)
     else:
         # Run quietex in-process, so it's debuggable and coverage sees it
         yield lambda args: _run_quietex_internal(["quietex"] + args, capsys)
@@ -78,3 +78,30 @@ def test_sentinel_file_missing():
     """
     with pytest.raises(FileNotFoundError):
         pkg_resources.read_text(quietex, "sentinel.txt")
+
+
+def latexmkrc(args="--latekmkrc"):
+    """Generate example latexmkrc file."""
+    return f"eval `quietex {args}`;"
+
+
+def document():
+    """Generate example LaTeX document."""
+    return r"""
+    \documentclass{article}
+    \begin{document}
+    Test
+    \end{document}
+    """
+
+
+def test_latexmk(in_temp_dir):
+    """Test running latexmkrc with the QuieTeX integration."""
+    open("latexmkrc", "w").write(latexmkrc())
+    open("main.tex", "w").write(document())
+    output = run(["latexmk"])
+    assert Path("main.tex").exists()
+    assert output.strip().endswith("are up-to-date")
+
+    # No "QuieTeX enabled" message, and no $pdflatex already defined warning
+    assert "quietex" not in output.lower()

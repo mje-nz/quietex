@@ -20,16 +20,16 @@ if (%r or rindex($pdflatex, "pdflatex", 0) == 0) {
 } else {
     # $pdflatex doesn't start with "pdflatex", which means there's some other
     # customisation in latexmkrc already
-    my $msg1 = '$pdflatex not recognised so QuieTeX will not be used.';
-    my $msg2 = 'To override this check, use quietex --latexmkrc-force';
+    my $msg = 'It looks like $pdflatex is already customized in your latexmkrc, so ' .
+        'QuieTeX will not insert itself.  To override this check, use ' .
+        '`quietex --latexmkrc-force`.';
     if (-t STDERR) {
         # Only use color if a terminal is attached
-        print STDERR colored($msg1, 'yellow'), "\n";
-        print STDERR colored($msg2, 'yellow'), "\n";
-    } else {
-        print STDERR $msg1, "\n", $msg2, "\n";
+        $msg = colored($msg, 'yellow')
     }
+    print STDERR $msg, "\n";
 }
+
 
 # Colour "Running pdflatex" etc messages
 {
