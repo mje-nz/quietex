@@ -2,8 +2,19 @@
 [![PyPI Package latest release](https://img.shields.io/pypi/v/quietex.svg)](https://pypi.org/project/quietex)
 [![Supported versions](https://img.shields.io/pypi/pyversions/quietex.svg)](https://pypi.org/project/quietex)
 
-Minimal command-line tool which filters and colours the output of `pdflatex` in real-time.
-Not a build tool, doesn't do any clever summaries, just makes it easier to watch.
+Take your LaTeX builds from this:
+![Animation of LaTeX compilation output from a chapter of my thesis](img/building-without-quietex.svg)
+to this:
+![Animation of LaTeX compilation output from a chapter of my thesis, with QuieTeX](img/building-with-quietex.svg)
+
+<!--
+Build animations with:
+termtosvg building-without-quietex.svg --command="latexmk chapters/background/background.tex" -t window_frame -g 80x15 -M 200 -D 2000
+-->
+
+QuieTeX is a minimal command-line tool which filters and colourizes the output of `pdflatex` in real-time.
+It is not a build tool, it does not do any clever summaries, it just makes it easier to read.
+
 
 
 
