@@ -183,6 +183,10 @@ def main(argv=None):
     args = parse_args(quietex_argv, command)
 
     if args.latexmkrc:
+        if not args.quiet:
+            quietex_command += " --verbose"
+        if not args.bell:
+            quietex_command += " --no-bell"
         print_latexmkrc(quietex_command, args.force)
     else:
         run_command(command, quiet=args.quiet, bell_on_error=args.bell)

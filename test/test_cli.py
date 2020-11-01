@@ -55,10 +55,19 @@ def test_cli_works(run_quietex):
     assert remove_control_sequences(output).strip() == "test"
 
 
-def test_latexmkrc(run_quietex):
+@pytest.mark.parametrize(
+    "args", ("", "--force", "--verbose --no-bell", "--force --verbose --no-bell")
+)
+def test_latexmkrc(run_quietex, args):
     """Test that quietex --latexmkrc prints something vaguely correct."""
-    output = run_quietex(["--latexmkrc"])
-    assert re.search(r'\$pdflatex = ".*?quietex \$pdflatex"', output)
+    cmd = ["--latexmkrc"]
+    if args:
+        cmd += args.split(" ")
+    output = run_quietex(cmd)
+    assert re.search(r'\$pdflatex = ".*?quietex .*?\$pdflatex"', output)
+    for arg in args.split(" "):
+        if arg != "--force":
+            assert arg in output
 
 
 # pylint: disable=invalid-name
