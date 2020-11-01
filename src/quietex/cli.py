@@ -131,28 +131,33 @@ def parse_args(argv: List[str], command):
     )
     parser.add_argument(
         "--force",
+        "-f",
         action="store_true",
         help="when printing latexmk settings, enable quietex even if $pdflatex is "
         "non-default",
     )
     bell = parser.add_mutually_exclusive_group()
-    bell.add_argument("--bell", action="store_true", help="ring bell on LaTeX error")
+    bell.add_argument(
+        "--bell", "-b", action="store_true", help="ring bell on LaTeX error (default)"
+    )
     bell.add_argument(
         "--no-bell",
         action="store_false",
         dest="bell",
-        help="don't ring bell on LaTeX error (default)",
+        help="don't ring bell on LaTeX error",
     )
     quiet = parser.add_mutually_exclusive_group()
-    quiet.add_argument("--quiet", "-q", action="store_true", help="hide I/O messages")
+    quiet.add_argument(
+        "--quiet", "-q", action="store_true", help="hide I/O messages (default)"
+    )
     quiet.add_argument(
         "--verbose",
         "-v",
         action="store_false",
         dest="quiet",
-        help="just dim I/O messages, and also add information messages from QuieTeX "
-        "(default)",
+        help="just dim I/O messages, and also add information messages from QuieTeX",
     )
+    parser.set_defaults(quiet=True, bell=True)
     args = parser.parse_args(argv)
 
     # Easier to check these manually than to explain it to argparse
