@@ -1,21 +1,24 @@
 use Term::ANSIColor;
 
 # Make pdflatex output prettier with QuieTeX
-if (%(force)r or rindex($pdflatex, "pdflatex", 0) == 0) {
+# <split>
+if (rindex($pdflatex, "pdflatex", 0) == 0) {
     $pdflatex = "%(cmd)s $pdflatex";
 } else {
     # $pdflatex doesn't start with "pdflatex", which means there's some other
     # customisation in latexmkrc already
     my $msg = 'It looks like $pdflatex is already customized in your latexmkrc, so ' .
         'QuieTeX will not insert itself.  To override this check, use ' .
-        '`quietex --latexmkrc-force`.';
+        '`quietex --latexmkrc --force`.';
     if (-t STDERR) {
         # Only use color if a terminal is attached
         $msg = colored($msg, 'yellow')
     }
     print STDERR $msg, "\n";
 }
-
+# <split>
+$pdflatex = "%(cmd)s $pdflatex";
+# <split>
 
 # Colour "Running pdflatex" etc messages
 {

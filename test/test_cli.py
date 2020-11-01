@@ -105,3 +105,15 @@ def test_latexmk(in_temp_dir):
 
     # No "QuieTeX enabled" message, and no $pdflatex already defined warning
     assert "quietex" not in output.lower()
+
+
+@pytest.mark.parametrize(
+    "quietex_args,cmd_args",
+    (("--quiet", ""), ("--quiet", "--quiet"), ("--quiet", "test -- -n --help")),
+)
+def test_arguments_are_untouched(quietex_args, cmd_args):
+    """Test that quietex passes through exactly the right arguments to the command."""
+    echo_args = str(Path(__file__).parent / "echo_args")
+    cmd = ["quietex"] + quietex_args.split(" ") + [echo_args] + cmd_args.split(" ")
+    output = run([a for a in cmd if a])
+    assert remove_control_sequences(output).strip() == cmd_args

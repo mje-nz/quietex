@@ -1,8 +1,8 @@
 """Main program implementation."""
+import argparse
 import importlib.resources as pkg_resources
 import os
 import sys
-import textwrap
 from typing import List
 
 import pexpect
@@ -91,49 +91,93 @@ def run_command(cmd: List[str], **kwargs):
 def print_latexmkrc(cmd, force=False):
     """Print latexmk configuration for using QuieTeX."""
     template = pkg_resources.read_text("quietex", "latexmkrc")
-    if cmd.endswith("__main__.py"):
-        cmd = "python3 -m " + __package__
-    print(template % dict(force=("force" if force else 0), cmd=cmd))
-
-
-def print_usage():
-    """Print usage message."""
-    print(
-        textwrap.dedent(
-            """
-        Usage: quietex [OPTIONS] [LATEX] [LATEX-OPTION]... [LATEX-ARGS]
-
-        Filter and colour output of pdflatex.
-
-        optional arguments:
-          -h, --help            show this help message and exit
-          -q, --quiet           filter out as much output as possible (not just dim)
-          -l, --latexmkrc       print latexmkrc
-          --latexmkrc-force     print latexmkrc which doesn't check $pdflatex first
-        """
-        ).strip()
-    )
-
-
-def main(args=None):
-    """Handle command line arguments."""
-    # Can't use argparse as it chokes on unrecognised options, so parse args manually
-    if args is None:
-        args = sys.argv
-    if len(args) < 2:
-        print_usage()
-        sys.exit(-1)
-
-    cmd, *args = args
-    if args[0] in ("-h", "--help"):
-        print_usage()
-    elif args[0] in ("-l", "--latexmkrc"):
-        print_latexmkrc(cmd)
-    elif args[0] == "--latexmkrc-force":
-        print_latexmkrc(cmd, force=True)
+    start, no_force_clause, force_clause, end = template.split("# <split>\n")
+    print(start, end="")
+    if force:
+        print(force_clause % dict(cmd=cmd), end="")
     else:
-        quiet = False
-        if args[0] in ("-q", "--quiet"):
-            quiet = True
-            args = args[1:]
-        run_command(args, quiet=quiet, bell_on_error=True)
+        print(no_force_clause % dict(cmd=cmd), end="")
+    print(end, end="")
+
+
+def split_argv(argv: List[str]):
+    """Split argument list into quietex invocation, quietex args, and command to run."""
+    quietex_command, *argv = argv
+    if "__main__" in quietex_command:
+        # argv[0] is the path to __main__.py when `python -m quietex` runs
+        quietex_command = "python -m quietex"
+    try:
+        # Split argument list before the first non-option argument
+        first_arg_index = next(i for i, a in enumerate(argv) if not a.startswith("-"))
+        quietex_argv = argv[:first_arg_index]
+        cmd = argv[first_arg_index:]
+        return quietex_command, quietex_argv, cmd
+    except StopIteration:
+        return quietex_command, argv, None
+
+
+def parse_args(argv: List[str], command):
+    """Parse quietex command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Filter and colourize LaTeX compilation output."
+    )
+    parser.add_argument("pdflatex", nargs="?", help="the command to run, e.g. pdflatex")
+    parser.add_argument("args", nargs="*", help="the command's arguments")
+    parser.add_argument(
+        "--latexmkrc",
+        action="store_true",
+        help="print latexmk settings which enable QuieTeX and also colourize latexmk "
+        "output; include `eval quietex --latexmkrc` in latexmkrc to use",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="when printing latexmk settings, enable quietex even if $pdflatex is "
+        "non-default",
+    )
+    bell = parser.add_mutually_exclusive_group()
+    bell.add_argument("--bell", action="store_true", help="ring bell on LaTeX error")
+    bell.add_argument(
+        "--no-bell",
+        action="store_false",
+        dest="bell",
+        help="don't ring bell on LaTeX error (default)",
+    )
+    quiet = parser.add_mutually_exclusive_group()
+    quiet.add_argument("--quiet", "-q", action="store_true", help="hide I/O messages")
+    quiet.add_argument(
+        "--verbose",
+        "-v",
+        action="store_false",
+        dest="quiet",
+        help="just dim I/O messages, and also add information messages from QuieTeX "
+        "(default)",
+    )
+    args = parser.parse_args(argv)
+
+    # Easier to check these manually than to explain it to argparse
+    if args.latexmkrc and command:
+        print("Use --latexmkrc or command, not both\n")
+    elif args.force and command:
+        print("--force is only valid with --latexmkrc\n")
+    elif not args.latexmkrc and not command:
+        pass
+    else:
+        return args
+    # Hit one of the error cases
+    parser.print_help()
+    sys.exit(1)
+
+
+def main(argv=None):
+    """Handle command line arguments."""
+    if argv is None:
+        argv = sys.argv
+
+    quietex_command, quietex_argv, command = split_argv(argv)
+    args = parse_args(quietex_argv, command)
+
+    if args.latexmkrc:
+        print_latexmkrc(quietex_command, args.force)
+    else:
+        run_command(command, quiet=args.quiet, bell_on_error=args.bell)
