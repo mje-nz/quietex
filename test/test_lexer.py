@@ -385,6 +385,16 @@ def test_round_trip():
         assert line == "".join(token[1] for token in lex(line))
 
 
+# TODO: handle errors inside <read image> e.g.
+ERROR_IN_READ_IMAGE = r"""
+<./chapters/corners//img/2018_09_17_ur5_corners_correlation_x.pdf
+
+pdfTeX warning: pdflatex (file ./chapters/corners//img/2018_09_17_ur5_corners_c
+orrelation_x.pdf): PDF inclusion: multiple pdfs with page group included in a s
+ingle page
+>"""
+
+
 # TODO: I'm guessing I intended to write tests for these
 
 # Underfull vbox warning followed by page numbers and noise
