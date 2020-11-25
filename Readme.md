@@ -2,15 +2,8 @@
 [![PyPI Package latest release](https://img.shields.io/pypi/v/quietex.svg)](https://pypi.org/project/quietex)
 [![Supported versions](https://img.shields.io/pypi/pyversions/quietex.svg)](https://pypi.org/project/quietex)
 
-Take your LaTeX builds from this:
-![Animation of LaTeX compilation output from a chapter of my thesis](img/building-without-quietex.svg)
-to this:
-![Animation of LaTeX compilation output from a chapter of my thesis, with QuieTeX](img/building-with-quietex.svg)
-
-<!--
-Build animations with:
-termtosvg building-without-quietex.svg --command="latexmk chapters/background/background.tex" -t window_frame -g 80x15 -M 200 -D 2000
--->
+Make your LaTeX build output just show the important stuff (see [here](/screen-recordings.md) for before and after screen recordings):
+![Screenshot of LaTeX build output from a chapter of my thesis](img/screenshot.png)
 
 QuieTeX is a minimal command-line tool which filters and colourizes the output of `pdflatex` in real-time.
 It is not a build tool, it does not do any clever summaries, it just makes it easier to read.
@@ -61,6 +54,9 @@ pre-commit install
 
 
 ## Misc
+TODO for 0.2.0:
+* Go over TODO list
+
 TODO:
 * Add tests
 * Add example before/after to readme
@@ -73,6 +69,7 @@ TODO:
 * Collapse multiple blank lines, maybe remove all blank lines between single-line warnings
 * Recognise multi-line warnings with (package name) continuations
 * Highlight "Output written on" message
+* Detect VS Code using [$TERM_PROGRAM](https://stackoverflow.com/a/57789690) and disable colours, since it doesn't support them in the output window and doesn't distinguish between the output window and the terminal
 
 The approach for colouring `latexmk` messages is inspired by [this Stack Overflow answer](https://tex.stackexchange.com/a/406370).
 The way I've packaged `latexmkrc` is taken straight from [mje-nz/pythontexfigures](https://github.com/mje-nz/pythontexfigure), my library for generating good-looking figures by integrating Python scripts into LaTeX documents.
