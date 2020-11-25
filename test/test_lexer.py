@@ -306,6 +306,7 @@ def test_lex_error():
         "LaTeX Warning: Marginpar on page 7 moved.",
         "Package natbib Warning: Citation `Siebert2009' on page 17 undefined on input line 22.",  # noqa: B950
         "pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist, replaced by a fixed one",  # noqa: B950
+        "** ATTENTION: Overriding command lockouts (line 45).",
     ),
 )
 def test_lex_simple_warnings(msg):

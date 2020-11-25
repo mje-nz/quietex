@@ -58,8 +58,7 @@ class LatexLogLexer(RegexLexer):
             # These regexes are acting on the output *after* it's been split into
             # sections that end on a start-page or open-file.
             (r"!.+", Generic.Error),
-            (r"^(Overfull|Underfull|.*[Ww]arning).*", Generic.Warning),
-            # TODO: ** ATTENTION: Overriding command lockouts (line 44).
+            (r"^(Overfull|Underfull|.*([Ww]arning|ATTENTION)).*", Generic.Warning),
             (START_PAGE_RE, State.StartPage, "page"),
             (OPEN_FILE_RE, IO.OpenFile, "file"),
             (r"\s*\)", IO.CloseFile, "file"),
