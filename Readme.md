@@ -54,18 +54,12 @@ pre-commit install
 
 
 ## Misc
-TODO for 0.2.0:
-* Go over TODO list
-
 TODO:
-* Add tests
-* Add example before/after to readme
 * Show open-files stack before warnings and errors
 * Display page numbers in real-time, before the end of the line
 * Completions for TeX prompt
 * Syntax highlighting for TeX snippets
 * Configurable styles
-* Verbose mode, note about dim on macOS
 * Collapse multiple blank lines, maybe remove all blank lines between single-line warnings
 * Recognise multi-line warnings with (package name) continuations
 * Highlight "Output written on" message
