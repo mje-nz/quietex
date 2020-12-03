@@ -39,7 +39,7 @@ def test_combine_text():
 
 
 # Output from a simple test document:
-# This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex)  # noqa: B950
+# This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex)  # noqa: E501
 #  restricted \write18 enabled.
 # entering extended mode
 # (./test.tex
@@ -47,7 +47,7 @@ def test_combine_text():
 # (/usr/local/texlive/2019/texmf-dist/tex/latex/base/article.cls
 # Document Class: article 2018/09/03 v1.4i Standard LaTeX document class
 # (/usr/local/texlive/2019/texmf-dist/tex/latex/base/size10.clo)) (./test.aux)
-# (./include file.tex) [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./test.aux) )</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>  # noqa: B950
+# (./include file.tex) [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./test.aux) )</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>  # noqa: E501
 # Output written on test.pdf (1 page, 12659 bytes).
 # Transcript written on test.log.
 
@@ -144,7 +144,7 @@ def test_lex_message_inside_files():
         (
             (
                 "(/usr/local/texlive/2019/texmf-dist/tex/latex/fp/fp.sty",
-                " `Fixed Point Package', Version 0.8, April 2, 1995 (C) Michael Mehlich",
+                " `Fixed Point Package', Version 0.8, April 2, 1995 (C) Michael Mehlich",  # noqa: E501
                 ")",
                 " ",
                 "(/usr/local/texlive/2019/texmf-dist/tex/latex/fp/defpattern.sty",
@@ -229,7 +229,7 @@ def test_lex_read_image(msg):
 
 def test_lex_read_image_in_warning():
     """Test lexing a read image inside a page number at the end of a warning."""
-    line = r"Underfull \vbox (badness 7963) has occurred while \output is active [2 <./test.png (PNG copy)>]"  # noqa: B950
+    line = r"Underfull \vbox (badness 7963) has occurred while \output is active [2 <./test.png (PNG copy)>]"  # noqa: E501
     assert lex(line) == [
         (
             Generic.Warning,
@@ -287,7 +287,7 @@ def test_lex_error():
 # (microtype)                interword spacing will disable it. You might want
 # (microtype)                to add `\microtypecontext{spacing=nonfrench}'
 # (microtype)                to your preamble.
-# pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist, replaced by a fixed one  # noqa: B950
+# pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist, replaced by a fixed one  # noqa: E501
 
 
 # TODO: Find examples for this old code
@@ -304,8 +304,8 @@ def test_lex_error():
         r"Underfull \vbox (badness 10000) has occurred while \output is active",
         r"Overfull \hbox (2.79605pt too wide) detected at line 132",
         "LaTeX Warning: Marginpar on page 7 moved.",
-        "Package natbib Warning: Citation `Siebert2009' on page 17 undefined on input line 22.",  # noqa: B950
-        "pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist, replaced by a fixed one",  # noqa: B950
+        "Package natbib Warning: Citation `Siebert2009' on page 17 undefined on input line 22.",  # noqa: E501
+        "pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist, replaced by a fixed one",  # noqa: E501
         "** ATTENTION: Overriding command lockouts (line 45).",
     ),
 )
@@ -316,11 +316,11 @@ def test_lex_simple_warnings(msg):
 
 # A few examples of page numbers and false positives from a complicated document
 # [Loading MPS to PDF converter (version 2006.09.02).]
-# ) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/grfext.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg)) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/pdflscape.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/lscape.sty)) ABD: EveryShipout initializing macros (/usr/local/texlive/2019/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl) (./pythontex-files-Thesis/Thesis.pytxmcr) (./pythontex-files-Thesis/Thesis.pytxpyg) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmr.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omllmm.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omslmsy.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omxlmex.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsa.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msa.cfg) (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msb.cfg) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmss.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmtt.fd) [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] (./Thesis.toc) (./Thesis.gls-abr [3] [4]) (./Thesis.sls [5] [6]) [7] [8] (./Thesis.tdo [9]) [10] (./chapters/fiducial_marker_system/fiducial_marker_system.tex  # noqa: B950
+# ) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/grfext.sty) (/usr/local/texlive/2019/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg)) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/pdflscape.sty (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/lscape.sty)) ABD: EveryShipout initializing macros (/usr/local/texlive/2019/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl) (./pythontex-files-Thesis/Thesis.pytxmcr) (./pythontex-files-Thesis/Thesis.pytxpyg) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmr.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omllmm.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omslmsy.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omxlmex.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsa.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msa.cfg) (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msb.cfg) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmss.fd) (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmtt.fd) [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] (./Thesis.toc) (./Thesis.gls-abr [3] [4]) (./Thesis.sls [5] [6]) [7] [8] (./Thesis.tdo [9]) [10] (./chapters/fiducial_marker_system/fiducial_marker_system.tex  # noqa: E501
 # [17 <./chapters/checkerboards//img/checkerboard.pdf>]
 # [18]
 #  [][][][]
-# Underfull \vbox (badness 7963) has occurred while \output is active [2 <./chapters/fiducial_marker_system//img/basic_marker.png (PNG copy)>]  # noqa: B950
+# Underfull \vbox (badness 7963) has occurred while \output is active [2 <./chapters/fiducial_marker_system//img/basic_marker.png (PNG copy)>]  # noqa: E501
 # Underfull \vbox (badness 10000) has occurred while \output is active [19]
 # \OT1/lmr/bx/n/10.95 H \OT1/lmr/m/n/10.95 = [] [] \OML/lmm/m/it/10.95 :
 
@@ -338,7 +338,7 @@ def test_lex_page_number_simple():
         "[1 <./chapters/fiducial_marker_system//img/basic_marker.png (PNG copy)>]",
         "[1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]",
         r"Underfull \vbox (badness 10000) has occurred while \output is active [1]",
-        # TODO: [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] (./Thesis.toc)  # noqa: B950
+        # TODO: [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] (./Thesis.toc)  # noqa: E501
     ),
 )
 def test_lex_page_number_complex(msg):

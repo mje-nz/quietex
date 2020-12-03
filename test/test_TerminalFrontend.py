@@ -89,21 +89,21 @@ class FakeTerminalFrontend(TerminalFrontend):
 
 
 def test_faketerminalfrontend_write_line():
-    r"""Test FakeTerminalFrontend.write handles a line terminated by \n properly."""
+    r"""Test writing a line terminated by \n."""
     frontend = FakeTerminalFrontend()
     frontend._write("test\n")
     frontend.assert_cursor(0, 1)
 
 
 def test_faketerminalfrontend_write_blank_line():
-    """Test FakeTerminalFrontend.write handles a line followed by a blank line properly."""
+    """Test writing a line followed by a blank line."""
     frontend = FakeTerminalFrontend()
     frontend._write("test\n\n")
     frontend.assert_cursor(0, 2)
 
 
 def test_faketerminalfrontend_write_newline():
-    r"""Test FakeTerminalFrontend.write handles a \n on its own properly."""
+    r"""Test writing \n on its own."""
     frontend = FakeTerminalFrontend()
     frontend._write("test")
     frontend._write("\n")
@@ -111,7 +111,7 @@ def test_faketerminalfrontend_write_newline():
 
 
 def test_faketerminalfrontend_write_newlines():
-    r"""Test FakeTerminalFrontend.write handles multiple \ns on their own properly."""
+    r"""Test writing multiple \ns on their own."""
     frontend = FakeTerminalFrontend()
     frontend._write("test")
     frontend._write("\n\n")
@@ -119,7 +119,7 @@ def test_faketerminalfrontend_write_newlines():
 
 
 def test_faketerminalfrontend_wrap_line():
-    r"""Test FakeTerminalFrontend.write wraps at 80 characters."""
+    r"""Test wrapping at 80 characters."""
     frontend = FakeTerminalFrontend()
     frontend._write("x" * 100)
     frontend.assert_display_like(["x" * 80, "x" * 20])

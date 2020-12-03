@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 """Print arguments to stdout.
 
-This is like POSIX "echo", but with no options at all."""
+This is like POSIX "echo", but with no options at all.
+"""
 import sys
 
 print(" ".join(sys.argv[1:]))
