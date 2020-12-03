@@ -16,6 +16,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Set up LaTeX
       run: |
+        sudo apt-get update
         sudo apt-get install texlive-latex-base latexmk
     - name: Install in editable mode
       run: |
