@@ -8,7 +8,7 @@ from typing import List
 import pexpect
 
 from ._meta import __version__  # noqa: F401
-from .frontend import BasicFrontend, TerminalFrontend  # noqa: F401
+from .frontend import BasicFrontend, TerminalFrontend
 
 
 def handle_prompt(tty: BasicFrontend, pdflatex: pexpect.spawn):
@@ -78,7 +78,7 @@ def run_command(cmd: List[str], **kwargs):
 
         # TODO: If you add a 0.1s delay here, it sometimes misses a bit of output at the
         #       end.  Could be related to pexpect/pexpect#120 or
-        #       https://pexpect.readthedocs.io/en/stable/commonissues.html#truncated-output-just-before-child-exits  # noqa: E501
+        #       https://pexpect.readthedocs.io/en/stable/commonissues.html#truncated-output-just-before-child-exits
 
     # TODO: Only add newline when necessary
     print()

@@ -5,7 +5,7 @@ import blessings
 from pygments import format
 from pygments.formatter import Formatter
 
-from .lexer import *  # noqa: F403
+from .lexer import *
 
 __all__ = ["AnsiTerminalFormatter", "contains_error", "format", "quiet_filter"]
 

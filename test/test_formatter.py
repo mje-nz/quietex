@@ -5,7 +5,7 @@ import blessings
 import pytest
 
 from quietex.formatter import AnsiTerminalFormatter, format, quiet_filter
-from quietex.lexer import *  # noqa: F403
+from quietex.lexer import *
 
 
 @pytest.fixture

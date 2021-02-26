@@ -11,3 +11,4 @@
 /dist/
 /pip-wheel-metadata/
 .mypy_cache/
+.coverage
