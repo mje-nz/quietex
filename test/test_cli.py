@@ -126,3 +126,7 @@ def test_arguments_are_untouched(quietex_args, cmd_args):
     cmd = ["quietex"] + quietex_args.split(" ") + [echo_args] + cmd_args.split(" ")
     output = run([a for a in cmd if a])
     assert remove_control_sequences(output).strip() == cmd_args
+
+
+# TODO: test passing this latin-1 string through pexpect
+# b"[]\T1/lmr/m/sc/10.95/100ls (+10) Kaartinen, H., Hyypp\xe4, J., Vas-taranta, M., Ku"

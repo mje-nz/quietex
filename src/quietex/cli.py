@@ -56,7 +56,11 @@ def run_command(cmd: List[str], **kwargs):
     env = dict(os.environ, max_print_line="1000000000")
 
     # Run pdflatex and filter/colour output
-    pdflatex = pexpect.spawn(cmd[0], cmd[1:], env=env, encoding="utf-8", timeout=0.2)
+    # pdflatex often outputs text in raw T1 encoding, which is close to (but not
+    # exactly) Latin-1 and definitely not UTF-8, so interpret it as latin-1 to
+    # avoid UnicodeDecodeErrors
+    # TODO: make this an option
+    pdflatex = pexpect.spawn(cmd[0], cmd[1:], env=env, encoding="latin-1", timeout=0.2)
 
     tty = TerminalFrontend(**kwargs)
     # tty = BasicFrontend(quiet=quiet)
