@@ -64,6 +64,7 @@ TODO:
 * Recognise multi-line warnings with (package name) continuations
 * Highlight "Output written on" message
 * Detect VS Code using [$TERM_PROGRAM](https://stackoverflow.com/a/57789690) and disable colours, since it doesn't support them in the output window and doesn't distinguish between the output window and the terminal
+* See if [rich](https://github.com/willmcgugan/rich#status) would be an easy drop-in for the status bar
 
 The approach for colouring `latexmk` messages is inspired by [this Stack Overflow answer](https://tex.stackexchange.com/a/406370).
 The way I've packaged `latexmkrc` is taken straight from [mje-nz/pythontexfigures](https://github.com/mje-nz/pythontexfigure), my library for generating good-looking figures by integrating Python scripts into LaTeX documents.
